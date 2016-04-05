@@ -80,6 +80,7 @@ fos_user:
     user_class: AppBundle\Entity\User
 
 # Configuração OAuth 2
+# Baseado no link acima e no https://github.com/FriendsOfSymfony/FOSOAuthServerBundle/blob/master/Resources/doc/configuration_reference.md
 fos_oauth_server:
     db_driver:           orm
     client_class:        AppBundle\Entity\OAuth2\Client

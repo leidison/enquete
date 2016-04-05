@@ -4,7 +4,7 @@
 # Baseado no link https://gist.github.com/tjamps/11d617a4b318d65ca583
 security:
     encoders:
-        FOS\UserBundle\Model\UserInterface: sha512
+        FOS\UserBundle\Model\UserInterface: bcrypt
 
     providers:
         fos_userbundle:
@@ -13,7 +13,7 @@ security:
     firewalls:
         oauth_token:
             # localização do recurso token
-            pattern: ^/oauth/v2/token
+            pattern: ^/api/oauth/v2/token
             security: false
         api:
             pattern: ^/api
