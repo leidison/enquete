@@ -8,8 +8,8 @@ security:
 
     providers:
         fos_userbundle:
-            # fos_user.user_provider.username_email does not seem to work (OAuth-spec related ("username + password") ?)
-            id: fos_user.user_provider.username
+            # user o email para logar
+            id: fos_user.user_provider.username_email
     firewalls:
         oauth_token:
             # localização do recurso token

@@ -52,7 +52,7 @@
       </column>
       <column id="18" parent="3" name="token">
         <mandatory>1</mandatory>
-        <data-type>varchar(45)</data-type>
+        <data-type>varchar(255)</data-type>
       </column>
       <column id="19" parent="3" name="expires_at">
         <data-type>int(11)</data-type>

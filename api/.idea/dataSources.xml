@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" hash="3042646879">
+  <component name="DataSourceManagerImpl" format="xml" hash="2011712317">
     <data-source source="LOCAL" name="Enquete - Localhost" uuid="269b576c-a136-4da0-ac90-eda4365b9a2f">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>

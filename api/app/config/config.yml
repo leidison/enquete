@@ -78,7 +78,10 @@ fos_user:
     db_driver: orm
     firewall_name: api
     user_class: AppBundle\Entity\User
-
+    # como vou sempre guardar os dados de usuário pelo
+    # fosuserbundle então não preciso preocupar-me com a integridade das informações
+    # sendo assim estou desativando para melhorar o desempenho
+    use_listener: false
 # Configuração OAuth 2
 # Baseado no link acima e no https://github.com/FriendsOfSymfony/FOSOAuthServerBundle/blob/master/Resources/doc/configuration_reference.md
 fos_oauth_server:
