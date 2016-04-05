@@ -64,3 +64,27 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+# Configuração REST
+# Baseado no link https://gist.github.com/tjamps/11d617a4b318d65ca583
+fos_rest:
+    routing_loader:
+        # todas as respostas serão convertidas para json
+        default_format: json
+        include_format: false
+
+fos_user:
+    db_driver: orm
+    firewall_name: api
+    user_class: AppBundle\Entity\User
+
+# Configuração OAuth 2
+fos_oauth_server:
+    db_driver:           orm
+    client_class:        AppBundle\Entity\OAuth2\Client
+    access_token_class:  AppBundle\Entity\OAuth2\AccessToken
+    refresh_token_class: AppBundle\Entity\OAuth2\RefreshToken
+    auth_code_class:     AppBundle\Entity\OAuth2\AuthCode
+    service:
+        # usado quando as credenciais de acesso são utilizadas para gerar o token
+        user_provider: fos_user.user_manager

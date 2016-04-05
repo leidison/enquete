@@ -1,24 +1,25 @@
 # To get started with security, check out the documentation:
 # http://symfony.com/doc/current/book/security.html
+
+# Baseado no link https://gist.github.com/tjamps/11d617a4b318d65ca583
 security:
+    encoders:
+        FOS\UserBundle\Model\UserInterface: sha512
 
-    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory:
-            memory: ~
-
+        fos_userbundle:
+            # fos_user.user_provider.username_email does not seem to work (OAuth-spec related ("username + password") ?)
+            id: fos_user.user_provider.username
     firewalls:
-        # disables authentication for assets and the profiler, adapt it according to your needs
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
+        oauth_token:
+            # localização do recurso token
+            pattern: ^/oauth/v2/token
             security: false
-
-        main:
-            anonymous: ~
-            # activate different ways to authenticate
-
-            # http_basic: ~
-            # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
-
-            # form_login: ~
-            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+        api:
+            pattern: ^/api
+            # vou proteger os recursos com oauth2
+            fos_oauth: true
+            # não guardarei cookie de sessão
+            stateless: true
+            # acesso anonimo está autorizado
+            anonymous: true
