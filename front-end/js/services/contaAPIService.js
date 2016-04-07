@@ -2,13 +2,12 @@ angular.module("enquete").service("contaAPI", [
     "$http", "CONSTANTS", "OAuth", "OAuthToken", "localStorageService",
     function ($http, CONSTANTS, OAuth, OAuthToken, localStorageService) {
         this.logout = function () {
-            localStorageService.remove("account");
+            localStorageService.remove("conta");
 
             OAuthToken.removeToken();
         };
 
         this.criar = function (conta) {
-            console.log(CONSTANTS.baseUrl);
             return $http.post(CONSTANTS.baseUrl + "conta", conta);
         };
         this.login = function (username, password) {
@@ -20,10 +19,12 @@ angular.module("enquete").service("contaAPI", [
             });
         };
         this.get = function () {
-            return localStorageService.get('account')
+            return localStorageService.get('conta')
         };
-        this.set = function (account) {
-            localStorageService.set('account', account);
+        this.set = function (conta) {
+            delete conta.password;
+            delete conta.plainPassword;
+            localStorageService.set('conta', conta);
         };
         this.isAuthenticated = function () {
             return OAuth.isAuthenticated();

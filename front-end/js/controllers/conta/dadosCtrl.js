@@ -1,6 +1,6 @@
 angular.module("enquete").controller("dadosContaCtrl", [
-    "$rootScope", "$scope", "$location", "MESSAGES", "contaAPI", "Flash",
-    function ($rootScope, $scope, $location, MESSAGES, contaAPI, Flash) {
+    "$rootScope", "$scope", "$location", "CONSTANTS", "MESSAGES", "contaAPI", "Flash",
+    function ($rootScope, $scope, $location, CONSTANTS, MESSAGES, contaAPI, Flash) {
 
         $scope.disableButton = false;
 
@@ -10,16 +10,14 @@ angular.module("enquete").controller("dadosContaCtrl", [
             // usado para bloquear o botão enquanto a tela não é redirecionada
             $scope.disableButton = true;
 
-            contaAPI.criar(conta).success(function (conta) {
+            contaAPI.criar(conta).success(function (data) {
 
-                console.log(conta);
 
                 // usuário criado com sucesso. Agora tentarei logar ele
                 contaAPI.login(conta.email, conta.password).then(
                     // sucesso ao autenticar
                     function (data) {
                         Flash.create('success', MESSAGES.contaRegistrada);
-
                         // login com sucesso. Agora jogarei na sessão os dados dele
                         contaAPI.set(conta);
 
@@ -28,13 +26,18 @@ angular.module("enquete").controller("dadosContaCtrl", [
                     // erro ao tentar autenticar.
                     // continua na pagina para tentar autenticar
                     function (data) {
-                        Flash.create('success', MESSAGES.contaRegistradaSemLogin);
+                        Flash.create('success', MESSAGES.contaRegistradaSemLogin, CONSTANTS.flashMessage.infinity);
 
                         $scope.disableButton = false;
                     }
                 );
             }).error(function (errorResponse) {
-                Flash.create('danger', MESSAGES.error);
+                Flash.clear();
+                if (errorResponse[0].message == "fos_user.username.already_used") {
+                    Flash.create('warning', MESSAGES.dadosAcessosExistentes, CONSTANTS.flashMessage.infinity);
+                } else {
+                    Flash.create('danger', MESSAGES.error, CONSTANTS.flashMessage.infinity);
+                }
                 $scope.disableButton = false;
             });
         };

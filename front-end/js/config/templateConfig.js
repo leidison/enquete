@@ -1,11 +1,15 @@
-angular.module("enquete").run(["$rootScope", "contaAPI", function ($rootScope) {
-    $rootScope.$on("$routeChangeSuccess", function () {
+angular.module("enquete").run(["$rootScope", "contaAPI", function ($rootScope, contaAPI) {
 
-        //$rootScope.account = contaAPI.isAuthenticated() ? contaAPI.get(true) : null;
-
-        $rootScope.header = {
-            title: '',
-            subtitle: ''
+    $rootScope.setTituloPagina = function (titulo, subtitulo) {
+        $rootScope.pagina = {
+            titulo: titulo,
+            subtitulo: subtitulo
         };
+    };
+
+    $rootScope.$on("$routeChangeSuccess", function () {
+        $rootScope.conta = contaAPI.isAuthenticated() ? contaAPI.get() : null;
+        // limpa o titulo das paginas
+        $rootScope.setTituloPagina();
     });
 }]);

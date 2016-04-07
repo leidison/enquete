@@ -1,5 +1,5 @@
 <nav class="navbar navbar-default">
-    <div class="container-fluid">
+    <div class="container">
         <!--        INICIO CABECALHO-->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed"
@@ -20,13 +20,19 @@
                 <li>
                     <a href="/">Home</a>
                 </li>
-                <li ng-if="account">
+                <li ng-if="conta">
                     <a href="/minhas-enquetes"> Minhas enquetes</a>
                 </li>
-                <li ng-if="account">
-                    <span ng-bind="{{account.email}}"></span><a href="/logout"> Sair</a>
+
+                <li class="dropdown" ng-if="conta">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">{{conta.email}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/logout">Sair</a></li>
+                    </ul>
                 </li>
-                <li ng-if="!account">
+
+                <li ng-if="!conta">
                     <a href="/acesso">
                         Acesso
                     </a>

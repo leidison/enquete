@@ -29,6 +29,7 @@ class ContaController extends FOSRestController
 
         // Converto o json passado para objeto User
         $user = $serializer->deserialize($request->getContent(), User::class, 'json');
+        $user->setUsername($user->getEmail());
         $validator = $this->get('validator');
         // valido o formulário de cadastro
         $errors = $validator->validate($user, array('Registration'));

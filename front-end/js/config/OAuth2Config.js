@@ -10,12 +10,12 @@ angular.module("enquete").config([
             grantPath: CONSTANTS.auth.grantPath
         });
 
-        //OAuthTokenProvider.configure({
-        //    name: 'token',
-        //    options: {
-        //        secure: true
-        //    }
-        //});
+        OAuthTokenProvider.configure({
+            name: 'token',
+            options: {
+                //// O valor default era secure: true. Porém, isso atrapalha o funcionamento de ngCookie
+            }
+        });
     }]).run(['$rootScope', '$window', 'OAuth', 'CONSTANTS', function ($rootScope, $window, OAuth, CONSTANTS) {
     $rootScope.$on('oauth:error', function (event, rejection) {
 
@@ -32,25 +32,4 @@ angular.module("enquete").config([
         // Redirect to `/login` with the `error_reason`.
         return $window.location.href = CONSTANTS.auth.grantPath + '?error_reason=' + rejection.data.error;
     });
-}]).run(function ($rootScope, $location, OAuth) {
-
-    // Assegura as rotas
-
-    $rootScope.$on('$routeChangeStart', function (event, toState) {
-        var requireLogin = toState.data.requireLogin;
-        var redirectToIfLogged = toState.data.redirectToIfLogged;
-
-        // se rota requer login e usuário não está logado
-        if (requireLogin && !OAuth.isAuthenticated()) {
-            event.preventDefault();
-
-            $location.path("/acesso");
-
-            // se o usuário estiver logado e acessar uma rota de login, por exemplo. Sera necessário redirecionar
-            // o usuario para outra tela
-        } else if (redirectToIfLogged != undefined && redirectToIfLogged != '' && OAuth.isAuthenticated()) {
-            $location.path(redirectToIfLogged);
-        }
-    });
-
-});
+}]);

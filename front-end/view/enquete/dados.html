@@ -1,0 +1,88 @@
+<form name="dadosForm" novalidate>
+    <div class="form-group" ng-class="{'has-error':hasError(dadosForm.titulo)}">
+        <label>* Título</label>
+        <input type="text" name="titulo" class="form-control" ng-model="enquete.titulo" required>
+        <div class="help-block" ng-messages="dadosForm.titulo.$error"
+             ng-show="hasError(dadosForm.titulo)">
+            <div ng-messages-include="/view/templates/message.html"></div>
+        </div>
+    </div>
+    <fieldset>
+        <legend>Dúvidas</legend>
+        <div ng-repeat="(key, pergunta) in enquete.perguntas">
+            <div class="panel panel-default" ng-class="{'panel-success' : !pergunta.id && enquete.id}">
+                <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <div ng-class="{'input-group' : enquete.perguntas.length > 1, 'has-error' : hasError(dadosForm.titulo{{key}})}">
+                        <input type="text"
+                               name="titulo{{key}}"
+                               class="form-control"
+                               placeholder="Digite a descrição da dúvida"
+                               ng-model="pergunta.descricao" required>
+                        <div class="input-group-btn" ng-if="enquete.perguntas.length > 1 ">
+                            <button class="btn btn-danger" ng-click="removeDuvida(key, enquete.perguntas)">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="input-group">
+                        <input type="text" name="resposta" class="form-control"
+                               placeholder="Digite a resposta"
+                               ng-model="auxResposta.descricao">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default"
+                                    ng-click="addResposta(auxResposta, pergunta.respostas)">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>Respostas</th>
+                            <th>Ação</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="resposta in pergunta.respostas"
+                            ng-class="{'success':!resposta.id && enquete.id}">
+                            <td ng-bind="resposta.descricao"></td>
+                            <td width="110" class="text-center">
+                                <button class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                </button>
+                                <button class="btn btn-danger">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <p>
+        <button type="button" class="btn btn-default"
+                ng-if="enquete.perguntas.length == key +1"
+                ng-click="addDuvida(enquete.perguntas)">
+            <span class="glyphicon glyphicon-plus"></span>
+            Adicionar dúvida
+        </button>
+    </p>
+    <br>
+    <p>
+
+        <button class="btn btn-success" ng-disabled="disableSubmission(dadosForm)">
+            Salvar informações
+        </button>
+        <a href="/minhas-enquetes" class="btn btn-default">
+            Voltar
+        </a>
+    </p>
+</form>

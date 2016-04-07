@@ -24,13 +24,13 @@
 
 <!--    INICIO CONTEUDO-->
 <div class="container">
-    <div class="page-header" ng-if="header.title">
-        <h1>
-            <span ng-bind="header.title"></span>
+    <div class="page-header" ng-if="pagina.titulo">
+        <h2>
+            <span ng-bind="pagina.titulo"></span>
             <br>
-            <small ng-bind="header.subtitle">
+            <small ng-bind="pagina.subtitulo">
             </small>
-        </h1>
+        </h2>
     </div>
     <flash-message duration="5000" show-close="true" on-dismiss="myCallback(flash);"></flash-message>
     <!--        on-dismiss="myCallback(flash)"-->
@@ -59,7 +59,6 @@
 <!-- Bootstrap of application -->
 <script src="/js/app.js"></script>
 <!-- CONFIG-->
-<script src="/js/config/corsConfig.js"></script>
 <script src="/js/constants/default.js"></script>
 <script src="/js/constants/messages.js"></script>
 <script src="/js/config/routeConfig.js"></script>
@@ -69,7 +68,11 @@
 <script src="/js/config/templateConfig.js"></script>
 <!-- CONTROLLERS-->
 <script src="/js/controllers/conta/loginCtrl.js"></script>
+<script src="/js/controllers/conta/logoutCtrl.js"></script>
 <script src="/js/controllers/conta/dadosCtrl.js"></script>
+<script src="/js/controllers/homeCtrl.js"></script>
+<script src="/js/controllers/enquete/minhasCtrl.js"></script>
+<script src="/js/controllers/enquete/dadosCtrl.js"></script>
 
 <!-- SERVICES-->
 <script src="/js/services/contaAPIService.js"></script>

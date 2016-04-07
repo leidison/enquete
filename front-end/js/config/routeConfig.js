@@ -6,15 +6,13 @@ angular.module("enquete").config(function ($routeProvider, $httpProvider, $locat
     $locationProvider.html5Mode({enabled: true, requireBase: false});
 
 
-    // requireLogin e redirectToIfLogged é contralado no arquivo OAuth2Config.js
-
-    //$routeProvider.when("/", {
-    //    templateUrl: "view/home.html",
-    //    controller: "homeCtrl",
-    //    data: {
-    //        requireLogin: false
-    //    }
-    //});
+    $routeProvider.when("/", {
+        templateUrl: "view/home.html",
+        controller: "homeCtrl",
+        data: {
+            requireLogin: false
+        }
+    });
     $routeProvider.when("/acesso", {
         templateUrl: "view/conta/login.html",
         controller: "loginCtrl",
@@ -22,53 +20,72 @@ angular.module("enquete").config(function ($routeProvider, $httpProvider, $locat
             redirectToIfLogged: '/minhas-enquetes'
         }
     });
-    //$routeProvider.when("/logout", {
-    //    controller: "logoutCtrl",
-    //    template: '',
-    //    data: {
-    //        requireLogin: false
-    //    }
-    //});
-    //$routeProvider.when("/minhas-enquetes", {
-    //    templateUrl: "view/enquete/minhas.html",
-    //    controller: "minhasEnquetesCtrl",
-    //    data: {
-    //        requireLogin: true
-    //    }
-    //});
-    //$routeProvider.when("/minhas-enquetes/cadastro", {
-    //    templateUrl: "/view/enquete/dados.html",
-    //    controller: "dadosEnqueteCtrl",
-    //    data: {
-    //        requireLogin: true
-    //    }
-    //});
-    //$routeProvider.when("/minhas-enquetes/{id}/edicao", {
-    //    templateUrl: "view/enquete/dados.html",
-    //    controller: "dadosEnqueteCtrl",
-    //    data: {
-    //        requireLogin: true
-    //    }
-    //});
-    //$routeProvider.when("/enquete/{id}/colaborando", {
-    //    templateUrl: "/view/enquete/colaborando.html",
-    //    controller: "colaborandoEnqueteCtrl",
-    //    data: {
-    //        requireLogin: false
-    //    }
-    //});
-    //$routeProvider.when("/enquete/resultado", {
-    //    templateUrl: "/view/enquete/resultado.html",
-    //    controller: "resultadoEnqueteCtrl",
-    //    data: {
-    //        requireLogin: false
-    //    }
-    //});
-    //$routeProvider.otherwise({
-    //    redirectTo: "/"
-    //});
+    $routeProvider.when("/logout", {
+        controller: "logoutCtrl",
+        template: '',
+        data: {
+            requireLogin: false
+        }
+    });
+    $routeProvider.when("/minhas-enquetes", {
+        templateUrl: "view/enquete/minhas.html",
+        controller: "minhasEnquetesCtrl",
+        data: {
+            requireLogin: true
+        }
+    });
+    $routeProvider.when("/minhas-enquetes/cadastro", {
+        templateUrl: "/view/enquete/dados.html",
+        controller: "dadosEnqueteCtrl",
+        data: {
+            requireLogin: true
+        }
+    });
+    $routeProvider.when("/minhas-enquetes/{id}/edicao", {
+        templateUrl: "view/enquete/dados.html",
+        controller: "dadosEnqueteCtrl",
+        data: {
+            requireLogin: true
+        }
+    });
+    $routeProvider.when("/enquete/{id}/colaborando", {
+        templateUrl: "/view/enquete/colaborando.html",
+        controller: "colaborandoEnqueteCtrl",
+        data: {
+            requireLogin: false
+        }
+    });
+    $routeProvider.when("/enquete/{id}/resultado", {
+        templateUrl: "/view/enquete/resultado.html",
+        controller: "resultadoEnqueteCtrl",
+        data: {
+            requireLogin: false
+        }
+    });
+    $routeProvider.otherwise({
+        redirectTo: "/"
+    });
 
-    $httpProvider.defaults.withCredentials = true;
-    delete $httpProvider.defaults.headers.common["X-Requested-With"];
+}).run(function ($rootScope, $location, OAuth) {
 
-});
+    // Assegura as rotas
+
+    $rootScope.$on('$routeChangeStart', function (event, toState) {
+
+        var requireLogin = toState.data.requireLogin;
+        var redirectToIfLogged = toState.data.redirectToIfLogged;
+
+        // se rota requer login e usuário não está logado
+        if (requireLogin && !OAuth.isAuthenticated()) {
+            event.preventDefault();
+
+            $location.path("/acesso");
+
+            // se o usuário estiver logado e acessar uma rota de login, por exemplo. Sera necessário redirecionar
+            // o usuario para outra tela
+        } else if (redirectToIfLogged != undefined && redirectToIfLogged != '' && OAuth.isAuthenticated()) {
+            $location.path(redirectToIfLogged);
+        }
+    });
+
+});;
