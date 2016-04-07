@@ -2,29 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7770121e-d337-44e7-bc00-c41f6c71cdb7" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../front-end/js/controllers/enquete/minhasCtrl.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../front-end/js/controllers/enquete/resultadoCtrl.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../front-end/view/enquete/dados.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../front-end/view/enquete/minhas.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../front-end/view/home.html" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../front-end/js/config/corsConfig.js" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../front-end/js/services/enqueteAPIService.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/config/config.yml" afterPath="$PROJECT_DIR$/app/config/config.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Controller/Api/ContaController.php" afterPath="$PROJECT_DIR$/src/AppBundle/Controller/Api/ContaController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../front-end/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../front-end/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../front-end/index.html" afterPath="$PROJECT_DIR$/../front-end/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../front-end/js/config/OAuth2Config.js" afterPath="$PROJECT_DIR$/../front-end/js/config/OAuth2Config.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../front-end/js/config/routeConfig.js" afterPath="$PROJECT_DIR$/../front-end/js/config/routeConfig.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../front-end/js/config/templateConfig.js" afterPath="$PROJECT_DIR$/../front-end/js/config/templateConfig.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../front-end/js/constants/messages.js" afterPath="$PROJECT_DIR$/../front-end/js/constants/messages.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../front-end/js/controllers/conta/dadosCtrl.js" afterPath="$PROJECT_DIR$/../front-end/js/controllers/conta/dadosCtrl.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../front-end/js/controllers/conta/loginCtrl.js" afterPath="$PROJECT_DIR$/../front-end/js/controllers/conta/loginCtrl.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../front-end/js/controllers/conta/logoutCtrl.js" afterPath="$PROJECT_DIR$/../front-end/js/controllers/conta/logoutCtrl.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../front-end/js/controllers/enquete/dadosCtrl.js" afterPath="$PROJECT_DIR$/../front-end/js/controllers/enquete/dadosCtrl.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../front-end/js/controllers/homeCtrl.js" afterPath="$PROJECT_DIR$/../front-end/js/controllers/homeCtrl.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../front-end/js/services/contaAPIService.js" afterPath="$PROJECT_DIR$/../front-end/js/services/contaAPIService.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../front-end/view/conta/login.html" afterPath="$PROJECT_DIR$/../front-end/view/conta/login.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../front-end/view/templates/menu.html" afterPath="$PROJECT_DIR$/../front-end/view/templates/menu.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../front-end/view/enquete/dados.html" afterPath="$PROJECT_DIR$/../front-end/view/enquete/dados.html" />
     </list>
     <ignored path="api.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -684,7 +666,7 @@
         <state vertical-scroll-proportion="0.4423963">
           <caret line="31" column="36" selection-start-line="31" selection-start-column="36" selection-end-line="31" selection-end-column="36" />
           <folding>
-            <element signature="e#43#72#0#PHP" expanded="true" />
+            <element signature="e#43#72#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>

@@ -18,7 +18,7 @@
                                name="titulo{{key}}"
                                class="form-control"
                                placeholder="Digite a descrição da dúvida"
-                               ng-model="pergunta.descricao" required>
+                               ng-model="pergunta.descricao" ng-required="pergunta.respostas.length > 0">
                         <div class="input-group-btn" ng-if="enquete.perguntas.length > 1 ">
                             <button class="btn btn-danger" ng-click="removeDuvida(key, enquete.perguntas)">
                                 <span class="glyphicon glyphicon-trash"></span>
@@ -48,14 +48,14 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="resposta in pergunta.respostas"
+                        <tr ng-repeat="(key, resposta) in pergunta.respostas"
                             ng-class="{'success':!resposta.id && enquete.id}">
                             <td ng-bind="resposta.descricao"></td>
                             <td width="110" class="text-center">
                                 <button class="btn btn-primary">
                                     <span class="glyphicon glyphicon-edit"></span>
                                 </button>
-                                <button class="btn btn-danger">
+                                <button class="btn btn-danger" ng-click="removeResposta(key, pergunta.respostas)">
                                     <span class="glyphicon glyphicon-trash"></span>
                                 </button>
                             </td>
@@ -78,7 +78,9 @@
     <br>
     <p>
 
-        <button class="btn btn-success" ng-disabled="disableSubmission(dadosForm)">
+        <button class="btn btn-success"
+                ng-disabled="disableSubmission(dadosForm)"
+                ng-click="submit(enquete)">
             Salvar informações
         </button>
         <a href="/minhas-enquetes" class="btn btn-default">
