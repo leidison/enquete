@@ -1,0 +1,75 @@
+<div class="row">
+    <div class="col-sm-4 col-sm-offset-1">
+        <div class="page-header">
+            <h2>Acesso</h2>
+        </div>
+        <form name="loginForm" novalidate>
+            <div class="form-group" ng-class="{'has-error' : hasError(loginForm.email)}">
+                <label for="email">* E-mail</label>
+                <input type="email" id="email" name="email" class="form-control" ng-model="credential.email" required>
+                <div class="help-block" ng-messages="loginForm.email.$error"
+                     ng-show="hasError(loginForm.email)">
+                    <div ng-messages-include="/view/templates/message.html"></div>
+                </div>
+            </div>
+            <div class="form-group" ng-class="{'has-error' : hasError(loginForm.password)}">
+                <label for="password">* Senha</label>
+                <input type="password" id="password" name="password" class="form-control"
+                       ng-model="credential.password" required>
+                <div class="help-block" ng-messages="loginForm.password.$error"
+                     ng-show="hasError(loginForm.password)">
+                    <div ng-messages-include="/view/templates/message.html"></div>
+                </div>
+            </div>
+            <p>
+                <button type="submit"
+                        class="btn btn-success btn-block"
+                        ng-click="login(credential)"
+                        ng-disabled="disableSubmission(loginForm)">Entrar
+                </button>
+            </p>
+
+        </form>
+    </div>
+
+    <div class="col-sm-4 col-sm-offset-1">
+        <div class="page-header">
+            <h2>Criar conta</h2>
+        </div>
+        <form name="cadastroForm" ng-controller="dadosContaCtrl" novalidate>
+            <div class="form-group">
+                <label>* E-mail</label>
+                <input type="email" name="email" class="form-control" ng-model="conta.email">
+            </div>
+            <div ng-class="{'has-error' : hasError(cadastroForm.plainPassword) || hasError(cadastroForm.password)}">
+                <div class="form-group">
+                    <label>* Senha</label>
+                    <input type="password" name="password" class="form-control"
+                           ng-model="conta.password" required>
+                    <div class="help-block" ng-messages="cadastroForm.password.$error"
+                         ng-show="hasError(cadastroForm.password)">
+                        <div ng-messages-include="/view/templates/message.html"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>* Confirmação de senha</label>
+                    <input type="password" name="plainPassword" class="form-control"
+                           ng-model="conta.plainPassword" confirm="conta.password" required>
+                    <div class="help-block" ng-messages="cadastroForm.plainPassword.$error"
+                         ng-show="hasError(cadastroForm.plainPassword)">
+                        <div ng-messages-include="/view/templates/message.html"></div>
+                    </div>
+                </div>
+            </div>
+            <p>
+                <button type="submit"
+                        class="btn btn-success btn-block"
+                        ng-click="submit(credential)"
+                        ng-disabled="disableSubmission(cadastroForm)">Cadastrar
+                </button>
+            </p>
+
+        </form>
+    </div>
+</div>

@@ -29,13 +29,6 @@ class Enquete
     private $titulo;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="slug", type="string", length=100, nullable=false)
-     */
-    private $slug;
-
-    /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="User")
@@ -46,9 +39,15 @@ class Enquete
     private $user;
 
     /**
+     * @var Pergunta[]
+     * @ORM\OneToMany(targetEntity="Pergunta", mappedBy="enquete")
+     */
+    private $perguntas;
+
+    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -71,34 +70,11 @@ class Enquete
     /**
      * Get titulo
      *
-     * @return string 
+     * @return string
      */
     public function getTitulo()
     {
         return $this->titulo;
-    }
-
-    /**
-     * Set slug
-     *
-     * @param string $slug
-     * @return Enquete
-     */
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
-
-    /**
-     * Get slug
-     *
-     * @return string 
-     */
-    public function getSlug()
-    {
-        return $this->slug;
     }
 
     /**
@@ -117,7 +93,7 @@ class Enquete
     /**
      * Get user
      *
-     * @return \AppBundle\Entity\User 
+     * @return \AppBundle\Entity\User
      */
     public function getUser()
     {

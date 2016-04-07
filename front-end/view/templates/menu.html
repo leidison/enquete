@@ -1,0 +1,38 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!--        INICIO CABECALHO-->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar-collapse">
+                <span class="sr-only">Expandir navegação</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">
+                Enquetes
+            </a>
+        </div>
+        <!--        FIM CABECALHO-->
+        <!--        INICIO MENUS-->
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                <li ng-if="account">
+                    <a href="/minhas-enquetes"> Minhas enquetes</a>
+                </li>
+                <li ng-if="account">
+                    <span ng-bind="{{account.email}}"></span><a href="/logout"> Sair</a>
+                </li>
+                <li ng-if="!account">
+                    <a href="/acesso">
+                        Acesso
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!--        FIM MENUS-->
+    </div>
+</nav>

@@ -1,0 +1,26 @@
+{
+  "name": "Enquete",
+  "homepage": "https://github.com/leidison/enquete",
+  "authors": [
+    "Leidison Siqueira Barbosa <leidison.sb@gmail.com>"
+  ],
+  "description": "Sistema de enquete",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.5.*",
+    "bootstrap": "~3.3.6",
+    "angular-route": "~1.5.*",
+    "angular-loading-bar": "~0.9.0",
+    "angular-flash-alert": "~2.2.7",
+    "angular-oauth2": "~4.0.0",
+    "angular-local-storage": "~0.2.7"
+  }
+}

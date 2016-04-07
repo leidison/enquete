@@ -31,7 +31,7 @@ class Pergunta
     /**
      * @var \Enquete
      *
-     * @ORM\ManyToOne(targetEntity="Enquete")
+     * @ORM\ManyToOne(targetEntity="Enquete", inversedBy="perguntas")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="enquete_id", referencedColumnName="id")
      * })
