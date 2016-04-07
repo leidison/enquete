@@ -1,6 +1,7 @@
 <?php
 namespace AppBundle\Controller\Api;
 
+use AppBundle\Entity\Enquete;
 use FOS\RestBundle\Controller\FOSRestController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,8 +23,10 @@ class EnqueteController extends FOSRestController
      * @Post("/")
      * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
      */
-    public function postAction()
+    public function postAction(Request $request)
     {
+        $enquete = $this->get('serializer')->deserialize($request->getContent(), Enquete::class);
+        var_dump($this->get('serializer')->serialize($enquete));die;
 
     }
 

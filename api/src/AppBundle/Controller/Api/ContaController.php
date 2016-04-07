@@ -2,6 +2,7 @@
 namespace AppBundle\Controller\Api;
 
 use AppBundle\Entity\Enquete;
+use AppBundle\Entity\User;
 use FOS\RestBundle\Controller\FOSRestController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,22 +20,31 @@ class ContaController extends FOSRestController
 
     /**
      * Usado para criar um novo usuário
-     * @Route("/")
+     * @Post("")
      */
     public function postAction(Request $request)
     {
-        $username   = $request->get('username');
-        $email      = $request->get('email');
-        $password   = $request->get('password');
+        $userManager = $this->container->get('fos_user.user_manager');
+        $serializer = $this->get('serializer');
 
-        $data = json_decode($request->getContent(), true);
+        // Converto o json passado para objeto User
+        $user = $serializer->deserialize($request->getContent(), User::class, 'json');
+        $validator = $this->get('validator');
+        // valido o formulário de cadastro
+        $errors = $validator->validate($user, array('Registration'));
 
-
-        var_dump($data);die;
-
-        $manipulator = $this->container->get('fos_user.util.user_manipulator');
-        $manipulator->create($username, $password, $email, 1, 0);
-        var_dump('sucesso');die;
+        if (count($errors)) {
+            // preparo a resposta de erro
+            $view = $this->view($errors, 400);
+        } else {
+            $manipulator = $this->container->get('fos_user.util.user_manipulator');
+            // Criando usuário na base de dados
+            $resultado = $manipulator->create($user->getUsername(), $user->getPassword(), $user->getEmail(), 1, 0);
+            // preparando resposta de sucesso
+            $view = $this->view(['success' => true]);
+        }
+        $view->setFormat('json');
+        return $this->handleView($view);
     }
 
 

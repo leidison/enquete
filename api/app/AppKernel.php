@@ -22,6 +22,8 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
             # autenticação via OAuth2
             new FOS\OAuthServerBundle\FOSOAuthServerBundle(),
+            # para liberar acesso externo ao dominio da api
+            new Nelmio\CorsBundle\NelmioCorsBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
