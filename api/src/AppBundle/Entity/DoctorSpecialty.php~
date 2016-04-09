@@ -1,0 +1,48 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * DoctorSpecialty
+ *
+ * @ORM\Table(name="doctor_specialty", indexes={@ORM\Index(name="fk_person_clinic_has_specialty_specialty1_idx", columns={"specialty_id"}), @ORM\Index(name="fk_doctor_specialty_person1_idx", columns={"person_id"}), @ORM\Index(name="fk_doctor_specialty_clinic1_idx", columns={"clinic_id"})})
+ * @ORM\Entity
+ */
+class DoctorSpecialty
+{
+    /**
+     * @var \Clinic
+     *
+     * @ORM\ManyToOne(targetEntity="Clinic")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="clinic_id", referencedColumnName="id")
+     * })
+     */
+    private $clinic;
+
+    /**
+     * @var \Person
+     *
+     * @ORM\ManyToOne(targetEntity="Person")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="person_id", referencedColumnName="id")
+     * })
+     */
+    private $person;
+
+    /**
+     * @var \Specialty
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="Specialty")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="specialty_id", referencedColumnName="id")
+     * })
+     */
+    private $specialty;
+
+
+}

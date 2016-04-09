@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Enquete
+ * City
  *
- * @ORM\Table(name="enquete", indexes={@ORM\Index(name="fk_enquete_user1_idx", columns={"user_id"})})
+ * @ORM\Table(name="city", indexes={@ORM\Index(name="fk_city_state1_idx", columns={"state_id"})})
  * @ORM\Entity
  */
-class Enquete
+class City
 {
     /**
      * @var integer
@@ -24,19 +24,19 @@ class Enquete
     /**
      * @var string
      *
-     * @ORM\Column(name="titulo", type="string", length=80, nullable=false)
+     * @ORM\Column(name="name", type="string", length=150, nullable=false)
      */
-    private $titulo;
+    private $name;
 
     /**
-     * @var \User
+     * @var \State
      *
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="State")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="state_id", referencedColumnName="id")
      * })
      */
-    private $user;
+    private $state;
 
 
 }

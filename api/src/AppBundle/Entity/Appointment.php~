@@ -1,0 +1,110 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Appointment
+ *
+ * @ORM\Table(name="appointment", indexes={@ORM\Index(name="fk_appointment_person1_idx", columns={"doctor_id"}), @ORM\Index(name="fk_appointment_clinic1_idx", columns={"clinic_id"}), @ORM\Index(name="fk_appointment_specialty1_idx", columns={"specialty_id"}), @ORM\Index(name="fk_appointment_health_insurance_card1_idx", columns={"health_insurance_card_id"}), @ORM\Index(name="fk_appointment_person2_idx", columns={"patient_id"})})
+ * @ORM\Entity
+ */
+class Appointment
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="schedule", type="datetime", nullable=false)
+     */
+    private $schedule;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="start_waiting", type="datetime", nullable=true)
+     */
+    private $startWaiting;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="finish", type="datetime", nullable=true)
+     */
+    private $finish;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="considerations", type="string", length=500, nullable=false)
+     */
+    private $considerations;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="status", type="boolean", nullable=false)
+     */
+    private $status;
+
+    /**
+     * @var \Clinic
+     *
+     * @ORM\ManyToOne(targetEntity="Clinic")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="clinic_id", referencedColumnName="id")
+     * })
+     */
+    private $clinic;
+
+    /**
+     * @var \HealthInsuranceCard
+     *
+     * @ORM\ManyToOne(targetEntity="HealthInsuranceCard")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="health_insurance_card_id", referencedColumnName="id")
+     * })
+     */
+    private $healthInsuranceCard;
+
+    /**
+     * @var \Person
+     *
+     * @ORM\ManyToOne(targetEntity="Person")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="doctor_id", referencedColumnName="id")
+     * })
+     */
+    private $doctor;
+
+    /**
+     * @var \Person
+     *
+     * @ORM\ManyToOne(targetEntity="Person")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="patient_id", referencedColumnName="id")
+     * })
+     */
+    private $patient;
+
+    /**
+     * @var \Specialty
+     *
+     * @ORM\ManyToOne(targetEntity="Specialty")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="specialty_id", referencedColumnName="id")
+     * })
+     */
+    private $specialty;
+
+
+}

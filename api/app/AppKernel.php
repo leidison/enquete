@@ -24,6 +24,8 @@ class AppKernel extends Kernel
             new FOS\OAuthServerBundle\FOSOAuthServerBundle(),
             # para liberar acesso externo ao dominio da api
             new Nelmio\CorsBundle\NelmioCorsBundle(),
+            # para poder serializar as entidades
+            new JMS\SerializerBundle\JMSSerializerBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

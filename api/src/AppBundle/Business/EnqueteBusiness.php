@@ -6,9 +6,13 @@ use  AppBundle\Entity\Enquete;
 
 class EnqueteBusiness extends Base
 {
+
     public function cadastro(Enquete $enquete)
     {
-        $this->getDoctrine()->getManager()->persist($enquete);
+        $enquete->setUser($this->getUser());
+
+        $this->getDoctrine()->getManager()->merge($enquete);
+
         $this->getDoctrine()->getManager()->flush();
 
     }

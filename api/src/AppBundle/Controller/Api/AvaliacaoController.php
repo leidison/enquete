@@ -34,6 +34,9 @@ class AvaliacaoController extends FOSRestController
 
         var_dump($enquete->getId());die;
 
+        $view->setFormat('json');
+        return $this->handleView($view);
+
         $data = array("hello" => "world");
         $view = $this->view($data);
         return $this->handleView($view);

@@ -1,0 +1,71 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Person
+ *
+ * @ORM\Table(name="person", indexes={@ORM\Index(name="fk_person_person_idx", columns={"responsible_id"})})
+ * @ORM\Entity
+ */
+class Person
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=150, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="personal_pass", type="string", length=50, nullable=false)
+     */
+    private $personalPass;
+
+    /**
+     * @var \Person
+     *
+     * @ORM\ManyToOne(targetEntity="Person")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="responsible_id", referencedColumnName="id")
+     * })
+     */
+    private $responsible;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Clinic", inversedBy="person")
+     * @ORM\JoinTable(name="person_clinic",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="person_id", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="clinic_id", referencedColumnName="id")
+     *   }
+     * )
+     */
+    private $clinic;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->clinic = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+}

@@ -1,0 +1,59 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * HealthInsuranceCard
+ *
+ * @ORM\Table(name="health_insurance_card", indexes={@ORM\Index(name="fk_health_insurance_card_health_insurance1_idx", columns={"health_insurance_id"}), @ORM\Index(name="fk_health_insurance_card_person1_idx", columns={"person_id"})})
+ * @ORM\Entity
+ */
+class HealthInsuranceCard
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="code", type="string", length=45, nullable=false)
+     */
+    private $code;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="status", type="boolean", nullable=false)
+     */
+    private $status;
+
+    /**
+     * @var \HealthInsurance
+     *
+     * @ORM\ManyToOne(targetEntity="HealthInsurance")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="health_insurance_id", referencedColumnName="id")
+     * })
+     */
+    private $healthInsurance;
+
+    /**
+     * @var \Person
+     *
+     * @ORM\ManyToOne(targetEntity="Person")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="person_id", referencedColumnName="id")
+     * })
+     */
+    private $person;
+
+
+}

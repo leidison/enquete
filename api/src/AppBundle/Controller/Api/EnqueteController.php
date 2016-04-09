@@ -20,13 +20,25 @@ class EnqueteController extends FOSRestController
     /**
      * Cria uma nova enquete
      *
-     * @Post("/")
+     * @Post("")
      * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
      */
     public function postAction(Request $request)
     {
-        $enquete = $this->get('serializer')->deserialize($request->getContent(), Enquete::class);
-        var_dump($this->get('serializer')->serialize($enquete));die;
+        $enquete = $this->get('serializer')
+            ->deserialize($request->getContent(), Enquete::class, 'json');
+
+        $errors = $this->get('validator')
+            ->validate($enquete);
+        if (count($errors)) {
+            // preparo a resposta de erro
+            $view = $this->view($errors, 400);
+        } else {
+            $resultado = $this->get('enquete_business')->cadastro($enquete);
+            $view = $this->view(['success' => true]);
+        }
+        $view->setFormat('json');
+        return $this->handleView($view);
 
     }
 

@@ -1,0 +1,34 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ClinicHealthInsurance
+ *
+ * @ORM\Table(name="clinic_health_insurance", indexes={@ORM\Index(name="fk_clinic_has_health_insurance_health_insurance1_idx", columns={"health_insurance_id"}), @ORM\Index(name="fk_clinic_has_health_insurance_clinic1_idx", columns={"clinic_id"})})
+ * @ORM\Entity
+ */
+class ClinicHealthInsurance
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="clinic_id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $clinicId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="health_insurance_id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $healthInsuranceId;
+
+
+}

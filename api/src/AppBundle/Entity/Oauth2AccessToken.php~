@@ -24,7 +24,7 @@ class Oauth2AccessToken
     /**
      * @var string
      *
-     * @ORM\Column(name="token", type="string", length=45, nullable=false)
+     * @ORM\Column(name="token", type="string", length=255, nullable=false)
      */
     private $token;
 
