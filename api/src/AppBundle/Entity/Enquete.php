@@ -36,7 +36,7 @@ class Enquete
     /**
      * @var string
      *
-     * @ORM\Column(name="ajuda", type="integer", nullable=false)
+     * @ORM\Column(name="ajudas", type="integer", nullable=false)
      */
     private $ajudas;
 

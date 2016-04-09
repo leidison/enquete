@@ -14,20 +14,18 @@ class EnqueteRepository extends EntityRepository
             ->leftJoin('E.perguntas', 'P')
             ->leftJoin('P.respostas', 'R');
 
-
-
         $todosFiltros = $this->filtroLista($queryBuilder);
         foreach ($filtros as $nome => $valor) {
             $todosFiltros[$nome]($valor);
         }
 
-        $primeiro = $pagina * $porPagina - $porPagina;
+        $primeiro = ($pagina - 1) * $porPagina;
         $queryBuilder->setFirstResult($primeiro)
             ->setMaxResults($porPagina);
 
-        $paginador = new Paginator($queryBuilder->getQuery());
+        $paginador = new Paginator($queryBuilder);
 
-        return $paginador->getQuery()->getArrayResult();
+        return $paginador->getIterator()->getArrayCopy();
     }
 
     /**
