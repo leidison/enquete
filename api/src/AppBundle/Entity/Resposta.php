@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="resposta", indexes={@ORM\Index(name="fk_resposta_pergunta1_idx", columns={"pergunta_id"})})
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class Resposta
 {
@@ -127,5 +128,15 @@ class Resposta
     public function getPergunta()
     {
         return $this->pergunta;
+    }
+
+    /**
+     * @ORM\PreFlush
+     */
+    public function quantidadeDefaultPersist()
+    {
+        if ($this->getQuantidade() == null) {
+            $this->setQuantidade(0);
+        }
     }
 }

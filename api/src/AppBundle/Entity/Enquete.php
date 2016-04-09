@@ -11,7 +11,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Enquete
  *
  * @ORM\Table(name="enquete", indexes={@ORM\Index(name="fk_enquete_user1_idx", columns={"user_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\EnqueteRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Enquete
 {
@@ -33,6 +34,13 @@ class Enquete
     private $titulo;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="ajuda", type="integer", nullable=false)
+     */
+    private $ajudas;
+
+    /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="User")
@@ -44,6 +52,8 @@ class Enquete
 
     /**
      * @var Pergunta[]
+     *
+     * @Assert\Valid
      * @Type("ArrayCollection<AppBundle\Entity\Pergunta>")
      * @ORM\OneToMany(targetEntity="Pergunta", mappedBy="enquete", cascade={"persist", "merge"})
      */
@@ -88,6 +98,29 @@ class Enquete
     public function getTitulo()
     {
         return $this->titulo;
+    }
+
+    /**
+     * Set ajudas
+     *
+     * @param integer $ajudas
+     * @return Enquete
+     */
+    public function setAjudas($ajudas)
+    {
+        $this->ajudas = $ajudas;
+
+        return $this;
+    }
+
+    /**
+     * Get ajuda
+     *
+     * @return integer
+     */
+    public function getAjudas()
+    {
+        return $this->ajudas;
     }
 
     /**
@@ -144,6 +177,16 @@ class Enquete
     public function getPerguntas()
     {
         return $this->perguntas;
+    }
+
+    /**
+     * @ORM\PreFlush
+     */
+    public function ajudasDefaultPersist()
+    {
+        if ($this->getAjudas() == null) {
+            $this->setAjudas(0);
+        }
     }
 
 }

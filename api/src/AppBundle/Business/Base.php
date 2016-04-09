@@ -36,7 +36,7 @@ class Base
 
     public function getRepository()
     {
-        return $this->getDoctrine()->get('doctrine')
+        return $this->getDoctrine()
             ->getRepository($this->entityName);
     }
 }

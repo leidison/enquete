@@ -44,6 +44,8 @@ class Pergunta
 
     /**
      * @var Resposta[]
+     *
+     * @Assert\Valid
      * @Type("ArrayCollection<AppBundle\Entity\Resposta>")
      * @ORM\OneToMany(targetEntity="Resposta", mappedBy="pergunta", cascade={"persist", "merge"})
      */
