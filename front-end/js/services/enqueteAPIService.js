@@ -3,6 +3,7 @@ angular.module("enquete").factory("enqueteAPI", [
     function ($resource, CONSTANTS) {
         return $resource(CONSTANTS.baseUrl + "enquete/:id", {}, {
             get: {method: 'GET'},
+            getMinhas: {method: 'GET', url: CONSTANTS.baseUrl + "enquete/minhas"},
             save: {method: 'POST'},
             delete: {method: 'DELETE'},
             update: {method: 'PUT'}

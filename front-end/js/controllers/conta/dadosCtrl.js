@@ -35,7 +35,6 @@ angular.module("enquete").controller("dadosContaCtrl", [
             }).error(function (errorResponse) {
 
                 Flash.clear();
-                console.log(errorResponse[0].message);
                 if (errorResponse && errorResponse[0].message == "fos_user.username.already_used") {
                     Flash.create('warning', MESSAGES.dadosAcessosExistentes, MESSAGES.infinity);
                 } else {

@@ -19,7 +19,7 @@ angular.module("enquete").service("contaAPI", [
             });
         };
         this.get = function () {
-            return localStorageService.get('conta')
+            return localStorageService.get('conta');
         };
         this.set = function (conta) {
             delete conta.password;
@@ -27,6 +27,9 @@ angular.module("enquete").service("contaAPI", [
             localStorageService.set('conta', conta);
         };
         this.isAuthenticated = function () {
+            if (!localStorageService.get('conta')) {
+                OAuthToken.removeToken();
+            }
             return OAuth.isAuthenticated();
         };
     }]);

@@ -25,6 +25,8 @@ angular.module("enquete").controller("dadosEnqueteCtrl", [
             ]
         };
 
+        $scope.disableButton = false;
+
         $scope.addResposta = function (auxResposta, respostas) {
             // verifica se o campo foi preenchido
             if (auxResposta && auxResposta.descricao) {
@@ -70,35 +72,48 @@ angular.module("enquete").controller("dadosEnqueteCtrl", [
             perguntas.splice(key, 1);
         };
 
+        // chamado ao validar se o botão de submit deve ser desabilitado ou não
+        $scope.disableSubmission = function (form) {
+            return form.$invalid || $scope.disableButton
+        };
 
         $scope.submit = function (enquete) {
+
+            $scope.disableButton = true;
+
+            // limpa as mensagens da tela
+            Flash.clear();
+
+            // basicamente irá limpar os paineis não preenchidos
             trataSubmit(enquete);
 
+            // se é uma edição
             if (enquete.id) {
                 enqueteAPI.update({}, enquete,
                     function success(response) {
-                        console.log('leidison');
+                        $scope.disableButton = false;
+                        Flash.create('success', MESSAGES.sucessoEdicaoEnquete, MESSAGES.default, {"class": "oneChanceToClose"});
+                        $location.path("/minhas-enquetes");
                     },
                     function error(errorResponse) {
-                        console.log(errorResponse);
+                        $scope.disableButton = false;
+                        Flash.create('danger', MESSAGES.erroEdicaoEnquete, MESSAGES.infinity);
                     }
                 );
             } else {
                 enqueteAPI.save({}, enquete,
                     function success(response) {
-                  console.log('leidison');
+                        $scope.disableButton = false;
+                        Flash.create('success', MESSAGES.sucessoCadastroEnquete, MESSAGES.default, {"class": "oneChanceToClose"});
+                        $location.path("/minhas-enquetes");
                     },
                     function error(errorResponse) {
-                        console.log(errorResponse);
+                        Flash.create('danger', MESSAGES.erroCadastroEnquete, MESSAGES.infinity);
+                        $scope.disableButton = false;
                     }
                 );
 
             }
-        };
-
-        // chamado ao validar se o botão de submit deve ser desabilitado ou não
-        $scope.disableSubmission = function (form) {
-            return form.$invalid || $scope.disableButton
         };
 
         var limpaEdicaoPergunta = function (objetoEdicao) {

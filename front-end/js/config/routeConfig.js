@@ -66,7 +66,7 @@ angular.module("enquete").config(function ($routeProvider, $httpProvider, $locat
         redirectTo: "/"
     });
 
-}).run(function ($rootScope, $location, OAuth, OAuthToken) {
+}).run(function ($rootScope, $location, contaAPI) {
     // Assegura as rotas
 
     $rootScope.$on('$routeChangeStart', function (event, toState) {
@@ -74,16 +74,16 @@ angular.module("enquete").config(function ($routeProvider, $httpProvider, $locat
         var redirectToIfLogged = toState.data.redirectToIfLogged;
 
         // se rota requer login e usuário não está logado
-        if (requireLogin && !OAuth.isAuthenticated()) {
+        if (requireLogin && !contaAPI.isAuthenticated()) {
             event.preventDefault();
 
             $location.path("/acesso");
 
             // se o usuário estiver logado e acessar uma rota de login, por exemplo. Sera necessário redirecionar
             // o usuario para outra tela
-        } else if (redirectToIfLogged != undefined && redirectToIfLogged != '' && OAuth.isAuthenticated()) {
+        } else if (redirectToIfLogged != undefined && redirectToIfLogged != '' && contaAPI.isAuthenticated()) {
             $location.path(redirectToIfLogged);
         }
     });
 
-});;
+});

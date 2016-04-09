@@ -1,17 +1,20 @@
 <a href="/minhas-enquetes/cadastro" class="btn btn-primary"> Criar nova enquete</a>
 <br>
 <br>
-<div class="panel panel-default">
-    <div class="panel-body">
-        <strong>Quero casar, ajudem-me</strong>
-        <br>
-        <small>
-            11 minutos atrás &nbsp;&nbsp; 2 perguntas &nbsp;&nbsp; 77 pessoas ajudaram
-        </small>
-        <br>
-        <br>
-        <a href="/enquete/1/resultado" class="btn btn-success"> Visualizer resultado</a>
-        <a href="/enquete/1" class="btn btn-default"> Editar</a>
-        <button class="btn btn-danger"> Excluir</button>
+<div infinite-scroll="carregaLista(paginacao)">
+    <div class="panel panel-default" ng-repeat="enquete in enquetes">
+        <div class="panel-body">
+            <strong>Quero casar, ajudem-me</strong>
+            <br>
+            <small>
+                {{enquete.perguntas.length}} {{enquete.perguntas.length <= 1 ? "pergunta" : "perguntas"}}
+                &nbsp;&nbsp; {{enquete.ajudas}} {{enquete.ajudas <= 1 ? "pessoa ajudou" : "pessoas ajudaram"}}
+            </small>
+            <br>
+            <br>
+            <a href="/enquete/{{enquetes.id}}/resultado" class="btn btn-success"> Visualizer resultado</a>
+            <a href="/enquete/{{enquetes.id}}" class="btn btn-default"> Editar</a>
+            <button class="btn btn-danger" ng-click="deleteEnquete(enquete)"> Excluir</button>
+        </div>
     </div>
 </div>
