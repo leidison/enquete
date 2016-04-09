@@ -17,7 +17,8 @@ angular.module("enquete").controller("dadosContaCtrl", [
                 contaAPI.login(conta.email, conta.password).then(
                     // sucesso ao autenticar
                     function (data) {
-                        Flash.create('success', MESSAGES.contaRegistrada);
+                        Flash.create('success', MESSAGES.contaRegistrada, MESSAGES.infinity, {class: "oneChanceToClose"});
+
                         // login com sucesso. Agora jogarei na sessão os dados dele
                         contaAPI.set(conta);
 
@@ -26,17 +27,19 @@ angular.module("enquete").controller("dadosContaCtrl", [
                     // erro ao tentar autenticar.
                     // continua na pagina para tentar autenticar
                     function (data) {
-                        Flash.create('success', MESSAGES.contaRegistradaSemLogin, CONSTANTS.flashMessage.infinity);
+                        Flash.create('success', MESSAGES.contaRegistradaSemLogin, MESSAGES.infinity);
 
                         $scope.disableButton = false;
                     }
                 );
             }).error(function (errorResponse) {
+
                 Flash.clear();
-                if (errorResponse[0].message == "fos_user.username.already_used") {
-                    Flash.create('warning', MESSAGES.dadosAcessosExistentes, CONSTANTS.flashMessage.infinity);
+                console.log(errorResponse[0].message);
+                if (errorResponse && errorResponse[0].message == "fos_user.username.already_used") {
+                    Flash.create('warning', MESSAGES.dadosAcessosExistentes, MESSAGES.infinity);
                 } else {
-                    Flash.create('danger', MESSAGES.error, CONSTANTS.flashMessage.infinity);
+                    Flash.create('danger', MESSAGES.error, MESSAGES.infinity);
                 }
                 $scope.disableButton = false;
             });

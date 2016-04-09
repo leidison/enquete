@@ -13,7 +13,7 @@ angular.module("enquete").config([
         OAuthTokenProvider.configure({
             name: 'token',
             options: {
-                //// O valor default era secure: true. Porém, isso atrapalha o funcionamento de ngCookie
+                secure: false
             }
         });
     }]).run(['$rootScope', '$window', 'OAuth', 'CONSTANTS', function ($rootScope, $window, OAuth, CONSTANTS) {

@@ -66,12 +66,10 @@ angular.module("enquete").config(function ($routeProvider, $httpProvider, $locat
         redirectTo: "/"
     });
 
-}).run(function ($rootScope, $location, OAuth) {
-
+}).run(function ($rootScope, $location, OAuth, OAuthToken) {
     // Assegura as rotas
 
     $rootScope.$on('$routeChangeStart', function (event, toState) {
-
         var requireLogin = toState.data.requireLogin;
         var redirectToIfLogged = toState.data.redirectToIfLogged;
 

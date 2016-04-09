@@ -7,6 +7,8 @@ angular.module("enquete", [
         // Barra de progresso em requisições XHR oriundas do angular
         "angular-loading-bar",
 
+        'ngResource',
+
         "angular-oauth2",
         // usado para guardar os dados do usuário nos cookies
         "LocalStorageModule"
