@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Type;
 use Proxies\__CG__\AppBundle\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Enquete
@@ -50,6 +51,8 @@ class Enquete
     /**
      * @var User
      *
+     * @JMS\Exclude
+     *
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
@@ -62,7 +65,7 @@ class Enquete
      *
      * @Assert\Valid
      * @Type("ArrayCollection<AppBundle\Entity\Pergunta>")
-     * @ORM\OneToMany(targetEntity="Pergunta", mappedBy="enquete", cascade={"persist", "merge"})
+     * @ORM\OneToMany(targetEntity="Pergunta", mappedBy="enquete", cascade={"persist", "merge", "remove"})
      */
     private $perguntas;
 
@@ -72,6 +75,12 @@ class Enquete
     public function __construct()
     {
         $this->perguntas = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
 
     /**

@@ -47,7 +47,7 @@ class Pergunta
      *
      * @Assert\Valid
      * @Type("ArrayCollection<AppBundle\Entity\Resposta>")
-     * @ORM\OneToMany(targetEntity="Resposta", mappedBy="pergunta", cascade={"persist", "merge"})
+     * @ORM\OneToMany(targetEntity="Resposta", mappedBy="pergunta", cascade={"persist", "merge", "remove"})
      */
     private $respostas;
 

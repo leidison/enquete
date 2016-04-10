@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Api;
 use AppBundle\Entity\Enquete;
 use FOS\RestBundle\Controller\FOSRestController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
@@ -45,12 +46,28 @@ class EnqueteController extends FOSRestController
     /**
      * Edita os dados da enquete
      *
-     * @Put("")
+     * @Put("/{id}", requirements={"id":"\d+"})
      * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
      */
-    public function putAction()
+    public function putAction(Enquete $enquete, Request $request)
     {
+        $enqueteEdicao = $this->get('serializer')
+            ->deserialize($request->getContent(), Enquete::class, 'json');
+        // popula o id da enquete
+        $enqueteEdicao->setId($request->get('id'));
 
+        $errors = $this->get('validator')
+            ->validate($enqueteEdicao);
+        if (count($errors)) {
+            // preparo a resposta de erro
+            $view = $this->view($errors, 400);
+        } else {
+            $resultado = $this->get('enquete_business')->edicao($enquete, $enqueteEdicao);
+
+            $view = $this->view(['success' => true]);
+        }
+        $view->setFormat('json');
+        return $this->handleView($view);
     }
 
     /**
@@ -67,12 +84,12 @@ class EnqueteController extends FOSRestController
     /**
      * Retorna as enquetes
      *
-     * @Get("")
+     * @Get("/{id}", requirements={"id"="\d+"})
      */
-    public function getAction(Request $request)
+    public function getAction(Enquete $enquete, Request $request)
     {
-        $data = array("hello" => "world");
-        $view = $this->view($data);
+        $view = $this->view($enquete)
+            ->setFormat('json');
         return $this->handleView($view);
     }
 
@@ -89,6 +106,7 @@ class EnqueteController extends FOSRestController
         );
 
         $resultado = $this->get('enquete_business')->paginado($filtro, $request->get('pagina', 1), $request->get('por_pagina', 10));
+
         $view = $this->view($resultado)
             ->setFormat('json');
         return $this->handleView($view);
