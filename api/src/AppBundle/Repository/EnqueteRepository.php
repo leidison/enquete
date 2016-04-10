@@ -12,7 +12,8 @@ class EnqueteRepository extends EntityRepository
         $queryBuilder = $this->createQueryBuilder('E')
             ->select('E', 'P', 'R')
             ->leftJoin('E.perguntas', 'P')
-            ->leftJoin('P.respostas', 'R');
+            ->leftJoin('P.respostas', 'R')
+            ->addOrderBy('E.data', 'DESC');
 
         $todosFiltros = $this->filtroLista($queryBuilder);
         foreach ($filtros as $nome => $valor) {
@@ -25,7 +26,13 @@ class EnqueteRepository extends EntityRepository
 
         $paginador = new Paginator($queryBuilder);
 
-        return $paginador->getIterator()->getArrayCopy();
+        // Mudar para uma forma de paginar que seja mais correta
+        // que essa e que leve em consideração a query feita acima
+        // Abaixo removo os dados de usuário.
+        return array_map(function ($enquete) {
+            $enquete->setUser(null);
+            return $enquete;
+        }, $paginador->getIterator()->getArrayCopy());
     }
 
     /**

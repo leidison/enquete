@@ -41,6 +41,13 @@ class Enquete
     private $ajudas;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="data", type="datetime", nullable=false)
+     */
+    private $data;
+
+    /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="User")
@@ -124,6 +131,29 @@ class Enquete
     }
 
     /**
+     * Set data
+     *
+     * @param \DateTime $data
+     * @return Enquete
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * Get data
+     *
+     * @return \DateTime
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
      * Set user
      *
      * @param \AppBundle\Entity\User $user
@@ -182,10 +212,11 @@ class Enquete
     /**
      * @ORM\PreFlush
      */
-    public function ajudasDefaultPersist()
+    public function dadosDefaultPersist()
     {
         if ($this->getAjudas() == null) {
-            $this->setAjudas(0);
+            $this->setAjudas(0)
+                ->setData(new \DateTime('now'));
         }
     }
 
