@@ -4,10 +4,11 @@
 <div infinite-scroll="carregaLista(paginacao)">
     <div class="panel panel-default" ng-repeat="enquete in enquetes">
         <div class="panel-body">
-            <strong>Quero casar, ajudem-me</strong>
+            <strong ng-bind="enquete.titulo"></strong>
             <br>
             <small>
-                {{enquete.perguntas.length}} {{enquete.perguntas.length <= 1 ? "pergunta" : "perguntas"}}
+                {{enquete.data | date:'medium'}}
+                &nbsp;&nbsp; {{enquete.perguntas.length}} {{enquete.perguntas.length <= 1 ? "pergunta" : "perguntas"}}
                 &nbsp;&nbsp; {{enquete.ajudas}} {{enquete.ajudas <= 1 ? "pessoa ajudou" : "pessoas ajudaram"}}
             </small>
             <br>

@@ -6,11 +6,15 @@ angular.module("enquete").controller("minhasEnquetesCtrl", [
 
         $scope.paginacao = {pagina: 1};
 
+        $scope.enquetes = [];
+
         $scope.carregaLista = function (paginacao) {
 
-            enqueteAPI.getMinhas(paginacao, function (response) {
-                $scope.enquetes = response.data;
-                paginacao.pagina += 1;
+            enqueteAPI.getMinhas(paginacao, function (enquetes) {
+                if (enquetes.length > 0) {
+                    $scope.enquetes = $scope.enquetes.concat(enquetes);
+                    paginacao.pagina += 1;
+                }
             }, function (errorResponse) {
                 Flash.clear();
                 Flash.create('danger', MESSAGES.erroListaMinhasEnquetes);
