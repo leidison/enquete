@@ -41,14 +41,14 @@ angular.module("enquete").config(function ($routeProvider, $httpProvider, $locat
             requireLogin: true
         }
     });
-    $routeProvider.when("/minhas-enquetes/{id}/edicao", {
-        templateUrl: "view/enquete/dados.html",
+    $routeProvider.when("/minhas-enquetes/:id/edicao", {
+        templateUrl: "/view/enquete/dados.html",
         controller: "dadosEnqueteCtrl",
         data: {
             requireLogin: true
         }
     });
-    $routeProvider.when("/enquete/{id}/colaborando", {
+    $routeProvider.when("/enquete/:id/colaborando", {
         templateUrl: "/view/enquete/colaborando.html",
         controller: "colaborandoEnqueteCtrl",
         data: {

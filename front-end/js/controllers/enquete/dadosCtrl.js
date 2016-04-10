@@ -1,29 +1,42 @@
 angular.module("enquete").controller("dadosEnqueteCtrl", [
-    "$rootScope", "$scope", "$location", "MESSAGES", "enqueteAPI", "Flash",
-    function ($rootScope, $scope, $location, MESSAGES, enqueteAPI, Flash) {
-
+    "$rootScope", "$scope", "$location", "$routeParams", "MESSAGES", "enqueteAPI", "Flash",
+    function ($rootScope, $scope, $location, $routeParams, MESSAGES, enqueteAPI, Flash) {
 
         $rootScope.setTituloPagina("Dados da enquete");
 
-        $scope.enquete = {
-            titulo: 'teste',
-            perguntas: [
-                {
-                    descricao: "pergunta1",
-                    respostas: [
-                        {descricao: 'resposta 1'},
-                        {descricao: 'resposta 2'}
-                    ]
-                },
-                {
-                    descricao: "pergunta2",
-                    respostas: [
-                        {descricao: 'resposta 2'},
-                        {descricao: 'resposta 3'}
-                    ]
-                }
-            ]
-        };
+        // Preenche os dados da enquete ou popula com valores default
+        if ($routeParams.id) {
+            enqueteAPI.get({id: $routeParams.id},
+                function (enquete) {
+                    $scope.enquete = enquete;
+                    // buscou com sucesso
+                }, function (erro) {
+                    // ocorreu um erro
+                    Flash.clear();
+                    Flash.create("danger", MESSAGES.erroBuscaEnquete, MESSAGES.infinity, MESSAGES.mostrarNaProximaPagina);
+                    $location.path("/minhas-enquetes");
+                });
+        } else {
+            $scope.enquete = {
+                titulo: 'teste',
+                perguntas: [
+                    {
+                        descricao: "pergunta1",
+                        respostas: [
+                            {descricao: 'resposta 1'},
+                            {descricao: 'resposta 2'}
+                        ]
+                    },
+                    {
+                        descricao: "pergunta2",
+                        respostas: [
+                            {descricao: 'resposta 2'},
+                            {descricao: 'resposta 3'}
+                        ]
+                    }
+                ]
+            };
+        }
 
         $scope.disableButton = false;
 
@@ -89,10 +102,10 @@ angular.module("enquete").controller("dadosEnqueteCtrl", [
 
             // se é uma edição
             if (enquete.id) {
-                enqueteAPI.update({}, enquete,
+                enqueteAPI.update({id: enquete.id}, enquete,
                     function success(response) {
                         $scope.disableButton = false;
-                        Flash.create('success', MESSAGES.sucessoEdicaoEnquete, MESSAGES.default, {"class": "oneChanceToClose"});
+                        Flash.create('success', MESSAGES.sucessoEdicaoEnquete, MESSAGES.default, MESSAGES.mostrarNaProximaPagina);
                         $location.path("/minhas-enquetes");
                     },
                     function error(errorResponse) {
@@ -104,7 +117,7 @@ angular.module("enquete").controller("dadosEnqueteCtrl", [
                 enqueteAPI.save({}, enquete,
                     function success(response) {
                         $scope.disableButton = false;
-                        Flash.create('success', MESSAGES.sucessoCadastroEnquete, MESSAGES.default, {"class": "oneChanceToClose"});
+                        Flash.create('success', MESSAGES.sucessoCadastroEnquete, MESSAGES.default, MESSAGES.mostrarNaProximaPagina);
                         $location.path("/minhas-enquetes");
                     },
                     function error(errorResponse) {
@@ -117,6 +130,7 @@ angular.module("enquete").controller("dadosEnqueteCtrl", [
         };
 
         var limpaEdicaoPergunta = function (objetoEdicao) {
+            console.log(objetoEdicao);
             // passei campo por campo em vez de um novo objeto,
             // para evitar de perder o gerencimento do angular
             delete objetoEdicao.id;

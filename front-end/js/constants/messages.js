@@ -4,6 +4,7 @@
 angular.module("enquete").constant('MESSAGES', {
     infinity: 0,
     default: 5000,
+    mostrarNaProximaPagina: {"class": "oneChanceToClose"},
     //------------------------------------------------------------------------------
     // MENSAGENS DE ERRO
     //------------------------------------------------------------------------------
@@ -12,7 +13,8 @@ angular.module("enquete").constant('MESSAGES', {
     errorGetAccount: "<strong>Eita!</strong> Não conseguimos recurar os seus dados. Tente novamente.",
     erroCadastroEnquete: "<strong>Eita!</strong> Ocorreram erros durante o cadastro da enquete.",
     erroEdicaoEnquete: "<strong>Eita!</strong> Ocorreram erros durante a edição da enquete.",
-    erroListaMinhasEnquetes: "<strong>Eita!</strong> Não conseguimos retornar as suas enuetes. Favor tente novamente mais tarde.",
+    erroListaMinhasEnquetes: "<strong>Eita!</strong> Não conseguimos retornar suas enquetes. Favor tente novamente mais tarde.",
+    erroBuscaEnquete: "<strong>Eita!</strong> Não conseguimos retornar a enquete. Favor tente novamente mais tarde.",
 
     //------------------------------------------------------------------------------
     // MENSAGENS DE ALERTA
