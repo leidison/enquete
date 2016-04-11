@@ -66,9 +66,15 @@ angular.module("enquete").config(function ($routeProvider, $httpProvider, $locat
         redirectTo: "/"
     });
 
-}).run(function ($rootScope, $location, contaAPI) {
+}).run(function ($rootScope, $location, contaAPI, localStorageService) {
     // Assegura as rotas
     $rootScope.$on('$routeChangeStart', function (event, toState) {
+        // gravo a url anterior
+        if ($location.$$path != localStorageService.get('urlAtual')) {
+            localStorageService.set('urlAnterior', localStorageService.get('urlAtual'));
+            localStorageService.set('urlAtual', $location.$$path);
+        }
+
         var requireLogin = toState.data.requireLogin;
         var redirectToIfLogged = toState.data.redirectToIfLogged;
 

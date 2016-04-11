@@ -1,12 +1,15 @@
 angular.module("enquete").controller("resultadoEnqueteCtrl", [
-    "$rootScope", "$scope", "$location", "$routeParams", "$filter", "MESSAGES", "enqueteAPI", "avaliacaoAPI", "Flash",
-    function ($rootScope, $scope, $location, $routeParams, $filter, MESSAGES, enqueteAPI, avaliacaoAPI, Flash) {
+    "$rootScope", "$scope", "$location", "$routeParams", "$filter", "MESSAGES", "enqueteAPI", "avaliacaoAPI", "Flash", "localStorageService",
+    function ($rootScope, $scope, $location, $routeParams, $filter, MESSAGES, enqueteAPI, avaliacaoAPI, Flash, localStorageService) {
         enqueteAPI.getOne({id: $routeParams.id},
             function (enquete) {
 
                 $rootScope.setTituloPagina(enquete.titulo, $filter('date')(enquete.data, 'medium'));
 
                 $scope.enquete = enquete;
+
+                $scope.urlVoltar = localStorageService.get('urlAnterior') === '/minhas-enquetes' ? '/minhas-enquetes' : '/';
+
                 $scope.colaboracao = [];
 
                 var maiorValor = 0;
@@ -34,7 +37,7 @@ angular.module("enquete").controller("resultadoEnqueteCtrl", [
             }, function (erro) {
                 // ocorreu um erro
                 Flash.clear();
-                Flash.create("danger", MESSAGES.erroBuscaEnquete, MESSAGES.infinity, MESSAGES.mostrarNaProximaPagina);
+                Flash.create("danger", MESSAGES.erroBuscaEnquete, MESSAGES.infinity, {class: "oneChanceToClose"});
                 $location.path("/");
             });
 

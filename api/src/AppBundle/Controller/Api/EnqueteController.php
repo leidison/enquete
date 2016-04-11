@@ -5,6 +5,7 @@ use AppBundle\Entity\Enquete;
 use FOS\RestBundle\Controller\FOSRestController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
@@ -35,7 +36,8 @@ class EnqueteController extends FOSRestController
             // preparo a resposta de erro
             $view = $this->view($errors, 400);
         } else {
-            $resultado = $this->get('enquete_business')->cadastro($enquete, $this->container->get('security.context')->getToken()->getUser());
+            $user = $this->container->get('security.context')->getToken()->getUser();
+            $resultado = $this->get('enquete_business')->cadastro($enquete, $user);
             $view = $this->view(array('success' => true));
         }
         $view->setFormat('json');
@@ -47,10 +49,15 @@ class EnqueteController extends FOSRestController
      * Edita os dados da enquete
      *
      * @Put("/{id}", requirements={"id":"\d+"})
-     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED') ")
      */
     public function putAction(Enquete $enquete, Request $request)
     {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        if ($enquete->getUser()->getId() != $user->getId()) {
+            throw new AccessDeniedException();
+        }
+
         $enqueteEdicao = $this->get('serializer')
             ->deserialize($request->getContent(), Enquete::class, 'json');
         // popula o id da enquete
@@ -75,8 +82,12 @@ class EnqueteController extends FOSRestController
      * @Delete("/{id}")
      * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
      */
-    public function deleteAction(Request $request)
+    public function deleteAction(Enquete $enquete, Request $request)
     {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        if ($enquete->getUser()->getId() != $user->getId()) {
+            throw new AccessDeniedException();
+        }
         $this->get('enquete_business')->remove($request->get('id'));
         $view = $this->view(array('success' => true))
             ->setFormat('json');

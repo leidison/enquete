@@ -39,7 +39,6 @@ class Resposta
     /**
      * @var integer
      *
-     * @Assert\Blank(groups={"cadastro","edicao"})
      *
      * @ORM\Column(name="quantidade", type="integer", nullable=false)
      */

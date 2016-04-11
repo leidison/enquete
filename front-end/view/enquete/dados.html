@@ -1,7 +1,7 @@
 <form name="dadosForm" novalidate>
     <div class="form-group" ng-class="{'has-error':hasError(dadosForm.titulo)}">
         <label>* Título</label>
-        <input type="text" name="titulo" class="form-control" ng-model="enquete.titulo" required>
+        <input type="text" name="titulo" class="form-control" ng-model="enquete.titulo" ng-maxlength="255" required>
         <div class="help-block" ng-messages="dadosForm.titulo.$error"
              ng-show="hasError(dadosForm.titulo)">
             <div ng-messages-include="/view/templates/message.html"></div>
@@ -13,13 +13,14 @@
         <div ng-repeat="(keyPergunta, pergunta) in enquete.perguntas">
 
             <div class="panel panel-default" ng-class="{'panel-success' : !pergunta.id && enquete.id}">
-                <div class="panel-heading">
+                <div class="panel-heading" ng-class="{'has-error' : hasError(dadosForm['titulo' + keyPergunta])}">
                     <label>Descrição</label>
-                    <div ng-class="{'input-group' : enquete.perguntas.length > 1, 'has-error' : hasError(dadosForm['titulo'+keyPergunta])}">
+                    <div ng-class="{'input-group' : enquete.perguntas.length > 1}">
                         <input type="text"
                                name="titulo{{keyPergunta}}"
                                class="form-control"
                                ng-model="pergunta.descricao"
+                               ng-maxlength="255"
                                required>
                         <div class="input-group-btn"
                              ng-if="enquete.perguntas.length > 1">
@@ -29,48 +30,54 @@
                             </button>
                         </div>
                     </div>
+                    <div class="help-block" ng-messages="dadosForm['titulo'+keyPergunta].$error"
+                         ng-show="hasError(dadosForm['titulo'+keyPergunta])">
+                        <div ng-messages-include="/view/templates/message.html"></div>
+                    </div>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" ng-class="{'has-error' : auxResposta[keyPergunta].descricao.length > 255}">
                     <label>Adicionar resposta</label>
+
                     <div class="input-group">
-                        <input type="text" name="resposta" class="form-control"
+                        <input type="text" name="resposta{{keyPergunta}}" class="form-control"
                                ng-model="auxResposta[keyPergunta].descricao">
                         <div class="input-group-btn">
                             <button class="btn btn-default"
-                                    ng-click="addResposta(pergunta.respostas, keyPergunta)">
+                                    ng-click="addResposta(pergunta.respostas, keyPergunta)"
+                                    ng-disabled="auxResposta[keyPergunta].descricao.length > 255">
                                 <span class="glyphicon glyphicon-plus"
                                       ng-class="{'glyphicon-ok' : auxResposta[keyPergunta].original}"></span>
                             </button>
                         </div>
                     </div>
+                    <div class="help-block" ng-if="auxResposta[keyPergunta].descricao.length > 255">
+                        Conteúdo muito grande
+                    </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                        <tr>
-                            <th>Respostas</th>
-                            <th class="text-center">Ação</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="(key, resposta) in pergunta.respostas"
-                            ng-class="{'success':!resposta.id && enquete.id}">
-                            <td ng-bind="resposta.descricao"></td>
-                            <td width="110" class="text-center">
-                                <button class="btn btn-default btn-sm"
-                                        ng-click="edicaoReposta(resposta, keyPergunta)">
-                                    <span class="glyphicon glyphicon-edit "></span>
-                                </button>
-                                <button class="btn btn-default btn-sm"
-                                        ng-click="removeResposta(key, pergunta.respostas, keyPergunta)">
-                                    <span class="glyphicon glyphicon-trash"></span>
-                                </button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </div>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>Respostas</th>
+                        <th class="text-center">Ação</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="(key, resposta) in pergunta.respostas"
+                        ng-class="{'success':!resposta.id && enquete.id}">
+                        <td ng-bind="resposta.descricao"></td>
+                        <td width="110" class="text-center">
+                            <button class="btn btn-default btn-sm"
+                                    ng-click="edicaoReposta(resposta, keyPergunta)">
+                                <span class="glyphicon glyphicon-edit "></span>
+                            </button>
+                            <button class="btn btn-default btn-sm"
+                                    ng-click="removeResposta(key, pergunta.respostas, keyPergunta)">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </fieldset>

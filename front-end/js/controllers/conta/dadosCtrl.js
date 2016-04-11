@@ -17,7 +17,7 @@ angular.module("enquete").controller("dadosContaCtrl", [
                 contaAPI.login(conta.email, conta.password).then(
                     // sucesso ao autenticar
                     function (data) {
-                        Flash.create('success', MESSAGES.contaRegistrada, MESSAGES.infinity, MESSAGES.mostrarNaProximaPagina);
+                        Flash.create('success', MESSAGES.contaRegistrada, MESSAGES.infinity, {class: "oneChanceToClose"});
 
                         // login com sucesso. Agora jogarei na sessão os dados dele
                         contaAPI.set(conta);

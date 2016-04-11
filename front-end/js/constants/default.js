@@ -11,5 +11,5 @@ angular.module("enquete").constant('CONSTANTS', {
     country: {
         brazil: 1,
         unitedStatesOfAmerica: 2
-    }
+    },
 });

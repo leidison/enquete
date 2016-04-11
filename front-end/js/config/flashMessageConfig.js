@@ -8,9 +8,8 @@ angular.module("enquete").run(function ($rootScope) {
             // se a classe existir então não remove o flash message dessa vez.
             if (value.config && value.config.class && value.config.class.search("oneChanceToClose") != -1) {
                 // removo a classe para que na proxima vez o flash message suma
-                var classFlash = value.config.class;
-                delete classFlash['oneChanceToClose'];
-                $rootScope.flashes[index].config.class = classFlash;
+
+                delete $rootScope.flashes[index].config.class;
 
                 messages.push($rootScope.flashes[index]);
             }

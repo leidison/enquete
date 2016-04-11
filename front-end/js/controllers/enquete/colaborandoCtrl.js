@@ -27,7 +27,7 @@ angular.module("enquete").controller("colaborandoEnqueteCtrl", [
 
                     avaliacaoAPI.save({id: $scope.enquete.id}, $scope.colaboracao,
                         function () {
-                            Flash.create("success", MESSAGES.sucessoColaborar, MESSAGES.infinity, MESSAGES.mostrarNaProximaPagina);
+                            Flash.create("success", MESSAGES.sucessoColaborar, MESSAGES.infinity, {class: "oneChanceToClose"});
                             $location.path("/enquete/" + $scope.enquete.id + "/resultado");
                         }, function (erro) {
                             Flash.create("danger", MESSAGES.erroColaborar, MESSAGES.infinity);
@@ -36,7 +36,7 @@ angular.module("enquete").controller("colaborandoEnqueteCtrl", [
             }, function (erro) {
                 // ocorreu um erro
                 Flash.clear();
-                Flash.create("danger", MESSAGES.erroBuscaEnquete, MESSAGES.infinity, MESSAGES.mostrarNaProximaPagina);
+                Flash.create("danger", MESSAGES.erroBuscaEnquete, MESSAGES.infinity, {class: "oneChanceToClose"});
                 $location.path("/");
             });
 

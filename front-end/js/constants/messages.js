@@ -4,7 +4,6 @@
 angular.module("enquete").constant('MESSAGES', {
     infinity: 0,
     default: 5000,
-    mostrarNaProximaPagina: {"class": "oneChanceToClose"},
     //------------------------------------------------------------------------------
     // MENSAGENS DE INFORMAÇÃO
     //------------------------------------------------------------------------------

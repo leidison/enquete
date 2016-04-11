@@ -1,6 +1,6 @@
 angular.module("enquete").controller("minhasEnquetesCtrl", [
-    "$rootScope", "$scope", "$location", "MESSAGES", "enqueteAPI", "Flash",
-    function ($rootScope, $scope, $location, MESSAGES, enqueteAPI, Flash) {
+    "$rootScope", "$scope", "$location", "MESSAGES", "enqueteAPI", "Flash", "localStorageService",
+    function ($rootScope, $scope, $location, MESSAGES, enqueteAPI, Flash, localStorageService) {
 
         $rootScope.setTituloPagina("Minhas dúvidas");
 
@@ -10,6 +10,12 @@ angular.module("enquete").controller("minhasEnquetesCtrl", [
 
         $scope.carregaLista = function (paginacao) {
 
+            // o infinit scroll está com um bug. Mesmo que eu vá para outra pagina, a biblioteca continua
+            // disparando as funções. Então enquanto não encontro outra biblioteca ou tento corrigir, vou deixar a valiação abaixo
+            if (localStorageService.get('urlAtual') != '/minhas-enquetes') {
+                console.log('ng infinit scroll bugado. Tela "minhas-enquetes"');
+                return false;
+            }
             enqueteAPI.getMinhas(paginacao, function (enquetes) {
                 if (enquetes.length > 0) {
                     $scope.enquetes = $scope.enquetes.concat(enquetes);

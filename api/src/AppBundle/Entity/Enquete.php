@@ -37,16 +37,12 @@ class Enquete
     /**
      * @var string
      *
-     * @Assert\Blank(groups={"cadastro","edicao"})
-     *
      * @ORM\Column(name="ajudas", type="integer", nullable=false)
      */
     private $ajudas;
 
     /**
      * @var string
-     *
-     * @JMS\Exclude
      *
      * @ORM\Column(name="data", type="datetime", nullable=false)
      */

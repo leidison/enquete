@@ -16,7 +16,7 @@ angular.module("enquete").controller("dadosEnqueteCtrl", [
                 }, function (erro) {
                     // ocorreu um erro
                     Flash.clear();
-                    Flash.create("danger", MESSAGES.erroBuscaEnquete, MESSAGES.infinity, MESSAGES.mostrarNaProximaPagina);
+                    Flash.create("danger", MESSAGES.erroBuscaEnquete, MESSAGES.infinity, {class: "oneChanceToClose"});
                     $location.path("/minhas-enquetes");
                 });
         } else {
@@ -105,7 +105,7 @@ angular.module("enquete").controller("dadosEnqueteCtrl", [
                 enqueteAPI.update({id: enquete.id}, enquete,
                     function success(response) {
                         $scope.disableButton = false;
-                        Flash.create('success', MESSAGES.sucessoEdicaoEnquete, MESSAGES.default, MESSAGES.mostrarNaProximaPagina);
+                        Flash.create('success', MESSAGES.sucessoEdicaoEnquete, MESSAGES.default, {class: "oneChanceToClose"});
                         $location.path("/minhas-enquetes");
                     },
                     function error(errorResponse) {
@@ -116,7 +116,9 @@ angular.module("enquete").controller("dadosEnqueteCtrl", [
             } else {
                 enqueteAPI.save({}, enquete,
                     function success(response) {
-                        Flash.create('success', MESSAGES.sucessoCadastroEnquete, MESSAGES.default, MESSAGES.mostrarNaProximaPagina);
+                        console.log(MESSAGES.sucessoCadastroEnquete);
+                        console.log({class: "oneChanceToClose"});
+                        Flash.create('success', MESSAGES.sucessoCadastroEnquete, MESSAGES.default, {class: "oneChanceToClose"});
                         $location.path("/minhas-enquetes");
                     },
                     function error(errorResponse) {

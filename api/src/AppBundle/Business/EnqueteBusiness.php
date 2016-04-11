@@ -18,8 +18,13 @@ class EnqueteBusiness extends Base
 
     }
 
+    /**
+     * @param Enquete $enquete
+     * @param Enquete $enqueteEdicao
+     */
     public function edicao(Enquete $enquete, Enquete $enqueteEdicao)
     {
+
         $this->sincronizaPerguntaResposta($enquete, $enqueteEdicao);
 
         $enqueteEdicao->setUser($enquete->getUser());

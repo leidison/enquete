@@ -47,7 +47,9 @@
                 <div class="form-group">
                     <label>* Senha</label>
                     <input type="password" name="password" class="form-control"
-                           ng-model="conta.password" required>
+                           ng-model="conta.password"
+                           ng-maxlength="255"
+                           required>
                     <div class="help-block" ng-messages="cadastroForm.password.$error"
                          ng-show="hasError(cadastroForm.password)">
                         <div ng-messages-include="/view/templates/message.html"></div>

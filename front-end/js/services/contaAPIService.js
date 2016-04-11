@@ -10,6 +10,7 @@ angular.module("enquete").service("contaAPI", [
         this.criar = function (conta) {
             return $http.post(CONSTANTS.baseUrl + "conta", conta);
         };
+
         this.login = function (username, password) {
             // limpa os dados de um eventual usuário no cookie
             this.logout();
