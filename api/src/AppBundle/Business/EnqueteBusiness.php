@@ -30,6 +30,13 @@ class EnqueteBusiness extends Base
 
     }
 
+    public function remove($id)
+    {
+        $enquete = $this->getManager()->getReference(Enquete::class, $id);
+        $this->getManager()->remove($enquete);
+        $this->getManager()->flush();
+    }
+
     public function paginado($filtro, $pagina, $porPagina)
     {
         return $this->getRepository()->paginado($filtro, $pagina, $porPagina);

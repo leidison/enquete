@@ -36,7 +36,7 @@ class EnqueteController extends FOSRestController
             $view = $this->view($errors, 400);
         } else {
             $resultado = $this->get('enquete_business')->cadastro($enquete, $this->container->get('security.context')->getToken()->getUser());
-            $view = $this->view(['success' => true]);
+            $view = $this->view(array('success' => true));
         }
         $view->setFormat('json');
         return $this->handleView($view);
@@ -62,9 +62,8 @@ class EnqueteController extends FOSRestController
             // preparo a resposta de erro
             $view = $this->view($errors, 400);
         } else {
-            $resultado = $this->get('enquete_business')->edicao($enquete, $enqueteEdicao);
-
-            $view = $this->view(['success' => true]);
+            $this->get('enquete_business')->edicao($enquete, $enqueteEdicao);
+            $view = $this->view(array('success' => true));
         }
         $view->setFormat('json');
         return $this->handleView($view);
@@ -73,12 +72,15 @@ class EnqueteController extends FOSRestController
     /**
      * Exclui a enquete
      *
-     * @Delete("")
+     * @Delete("/{id}")
      * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-
+        $this->get('enquete_business')->remove($request->get('id'));
+        $view = $this->view(array('success' => true))
+            ->setFormat('json');
+        return $this->handleView($view);
     }
 
     /**
@@ -86,7 +88,7 @@ class EnqueteController extends FOSRestController
      *
      * @Get("/{id}", requirements={"id"="\d+"})
      */
-    public function getAction(Enquete $enquete, Request $request)
+    public function getOneAction(Enquete $enquete, Request $request)
     {
         $view = $this->view($enquete)
             ->setFormat('json');
@@ -106,6 +108,20 @@ class EnqueteController extends FOSRestController
         );
 
         $resultado = $this->get('enquete_business')->paginado($filtro, $request->get('pagina', 1), $request->get('por_pagina', 10));
+
+        $view = $this->view($resultado)
+            ->setFormat('json');
+        return $this->handleView($view);
+    }
+
+    /**
+     * Retorna as enquetes do usuário logado
+     *
+     * @Get("")
+     */
+    public function getAction(Request $request)
+    {
+        $resultado = $this->get('enquete_business')->paginado(array(), $request->get('pagina', 1), $request->get('por_pagina', 10));
 
         $view = $this->view($resultado)
             ->setFormat('json');

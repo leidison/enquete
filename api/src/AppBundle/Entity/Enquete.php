@@ -17,6 +17,7 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Enquete
 {
+
     /**
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id

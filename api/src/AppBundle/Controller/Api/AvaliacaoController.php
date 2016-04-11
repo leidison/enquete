@@ -2,6 +2,7 @@
 namespace AppBundle\Controller\Api;
 
 use AppBundle\Entity\Enquete;
+use AppBundle\Util\AvaliacaoUtil;
 use FOS\RestBundle\Controller\FOSRestController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -9,7 +10,7 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 
 /**
- * @Route("/avaliacao")
+ * @Route("/enquete/{id}/avaliacao")
  */
 class AvaliacaoController extends FOSRestController
 {
@@ -17,29 +18,22 @@ class AvaliacaoController extends FOSRestController
     /**
      * Gera uma nova avaliação de enquete
      *
-     * @Post("/")
+     * @Post("")
      */
-    public function postAction()
+    public function postAction(Enquete $enquete, Request $request)
     {
+        $avaliacoes = $this->get('serializer')
+            ->deserialize($request->getContent(), 'array', 'json');
 
-    }
-
-    /**
-     * Retorna a avaliação de uma enquete
-     *
-     * @Get("/{enquete}")
-     */
-    public function getAction(Enquete $enquete, Request $request)
-    {
-
-        var_dump($enquete->getId());die;
-
+        $sucesso = $this->get('avaliacao_business')->gerar($enquete, $avaliacoes);
+        if ($sucesso) {
+            $view = $this->view(array('success' => true));
+        } else {
+            $view = $this->view(array('success' => false), 400);
+        }
         $view->setFormat('json');
         return $this->handleView($view);
 
-        $data = array("hello" => "world");
-        $view = $this->view($data);
-        return $this->handleView($view);
     }
 
 }
