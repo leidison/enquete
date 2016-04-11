@@ -24,11 +24,12 @@ class ContaController extends FOSRestController
      */
     public function postAction(Request $request)
     {
-        $userManager = $this->container->get('fos_user.user_manager');
         $serializer = $this->get('serializer');
-
         // Converto o json passado para objeto User
+
+        
         $user = $serializer->deserialize($request->getContent(), User::class, 'json');
+
         $user->setUsername($user->getEmail());
         $validator = $this->get('validator');
         // valido o formulário de cadastro

@@ -1,6 +1,7 @@
 <?php
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Enquete;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
@@ -49,5 +50,41 @@ class EnqueteRepository extends EntityRepository
             }
             // colocar futuros filtros abaixo
         );
+    }
+
+    /**
+     * Responde a enquete
+     *
+     * @param Enquete $enquete
+     * @param $avaliacoes
+     * @throws \Exception
+     */
+    public function gerarAvaliacao(Enquete $enquete, $avaliacoes)
+    {
+        $em = $this->getEntityManager();
+        $em->beginTransaction();
+        try {
+            $qEn = $em->createQueryBuilder()
+                ->update('\AppBundle\Entity\Enquete', 'E')
+                ->set('E.ajudas', 'E.ajudas +1')
+                ->where('E.id = :id')
+                ->setParameter('id', $enquete->getId())
+                ->getQuery();
+            $qEn->execute();
+
+            foreach ($avaliacoes as $avaliacao) {
+                $em->createQueryBuilder()
+                    ->update('AppBundle\Entity\Resposta', 'R')
+                    ->set('R.quantidade', 'R.quantidade +1')
+                    ->where('R.id = :id')
+                    ->setParameter('id', $avaliacao['resposta'])
+                    ->getQuery()
+                    ->execute();
+            }
+            $em->commit();
+        } catch (\Exception $e) {
+            $em->rollback();
+            throw $e;
+        }
     }
 }

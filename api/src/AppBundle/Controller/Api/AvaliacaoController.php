@@ -2,7 +2,6 @@
 namespace AppBundle\Controller\Api;
 
 use AppBundle\Entity\Enquete;
-use AppBundle\Util\AvaliacaoUtil;
 use FOS\RestBundle\Controller\FOSRestController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,10 +21,10 @@ class AvaliacaoController extends FOSRestController
      */
     public function postAction(Enquete $enquete, Request $request)
     {
-        $avaliacoes = $this->get('serializer')
+        $avaliacao = $this->get('serializer')
             ->deserialize($request->getContent(), 'array', 'json');
 
-        $sucesso = $this->get('avaliacao_business')->gerar($enquete, $avaliacoes);
+        $sucesso = $this->get('avaliacao_business')->gerar($enquete, $avaliacao);
         if ($sucesso) {
             $view = $this->view(array('success' => true));
         } else {

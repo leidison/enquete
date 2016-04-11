@@ -10,52 +10,45 @@ class AvaliacaoBusiness extends Base
 
     public function gerar(Enquete $enquete, $avaliacoes)
     {
-        $valido = $this->valido($enquete, $avaliacoes);
-        if ($valido) {
-            
+        if ($this->validaVarias($enquete, $avaliacoes)) {
+            $this->getRepository()->gerarAvaliacao($enquete, $avaliacoes);
+            return true;
         }
         return false;
     }
 
-    private function valido($enquete, $avaliacoes)
+    private function validaVarias($enquete, $avaliacoes)
     {
-        if (count($avaliacoes)) {
-            foreach ($avaliacoes as $avaliacao) {
-                if (empty($avaliacao['pergunta']) || empty($avaliacao['resposta'])) {
-                    return false;
-                }
-                // verifica se a pergunta está vinculada à enquete
-                $vinculada = $enquete->getPerguntas()->exists(function ($key, $pergunta) use ($avaliacao) {
-                    return $avaliacao['pergunta'] == $pergunta->getId();
-                });
-                if ($vinculada == false) {
-                    return false;
-                } else {
-                    // verifica se a resposta está vinculada a pergunta
-                    $avaliacao['resposta'];
-                    foreach ($enquete->getPerguntas() as $pergunta) {
-                        // se a pergunta for diferente a avaliação então pulo para proxima pergunta.
-                        // Pois, ou ela foi marcada e vai aparecer no proximo loop ou ela não foi marcada
-                        if ($pergunta->getId() != $avaliacao['pergunta']) {
-                            continue;
-                        } else {
-                            // verifica se a respota está vinculada à pergunta
-                            $vinculada = $pergunta->getRespostas()->exists(function ($key, $resposta) use ($avaliacao) {
-                                return $avaliacao['resposta'] == $resposta->getId();
-                            });
-                            // se estiver vinculada passa para a proxima
-                            if ($vinculada) {
-                                continue;
-                            } else {
-                                return false;
-                            }
-                        }
-                    }
-                }
+        $perguntas = array();
+        foreach ($avaliacoes as $avaliacao) {
+            // verifica se tem pergunta repetida
+            if (in_array($avaliacao['pergunta'], $perguntas)) {
+                return false;
+            }
+            $perguntas[] = $avaliacao['pergunta'];
+            $valido = $this->valida($enquete, $avaliacao);
+            if ($valido == false) {
+                return false;
             }
         }
-        // como não foi retornado false nos fluxos acima, então, devo retornar true.
-        // Pois está tudo vinculado corretamente.
         return true;
+    }
+
+    private function valida($enquete, $avaliacao)
+    {
+        if (!empty($avaliacao['pergunta']) || !empty($avaliacao['resposta'])) {
+            $perguntas = $enquete->getPerguntas()->filter(function ($pergunta) use ($avaliacao) {
+                return $pergunta->getId() == $avaliacao['pergunta'];
+            });
+            if (count($perguntas)) {
+                $pergunta = $perguntas->first();
+                $exists = $pergunta->getRespostas()
+                    ->exists(function ($key, $resposta) use ($avaliacao) {
+                        return $resposta->getId() == $avaliacao['resposta'];
+                    });
+                return $exists;
+            }
+        }
+        return false;
     }
 }
