@@ -33,13 +33,15 @@
     </div>
 
     <div class="col-sm-4 col-sm-offset-1">
+
+
         <div class="page-header">
             <h2>Criar conta</h2>
         </div>
         <form name="cadastroForm" ng-controller="dadosContaCtrl" novalidate>
             <div class="form-group">
                 <label>* E-mail</label>
-                <input type="email" name="email" class="form-control" ng-model="conta.email">
+                <input type="email" name="email" class="form-control" ng-model="conta.email" required>
             </div>
             <div ng-class="{'has-error' : hasError(cadastroForm.plainPassword) || hasError(cadastroForm.password)}">
                 <div class="form-group">
@@ -62,7 +64,6 @@
                     </div>
                 </div>
             </div>
-            {{conta}}
             <p>
                 <button type="submit"
                         class="btn btn-success btn-block"

@@ -28,7 +28,7 @@ angular.module("enquete").controller("colaborandoEnqueteCtrl", [
                     avaliacaoAPI.save({id: $scope.enquete.id}, $scope.colaboracao,
                         function () {
                             Flash.create("success", MESSAGES.sucessoColaborar, MESSAGES.infinity, MESSAGES.mostrarNaProximaPagina);
-                            //$location.path("/enquete/" + $scope.enquete.id + "/resultado");
+                            $location.path("/enquete/" + $scope.enquete.id + "/resultado");
                         }, function (erro) {
                             Flash.create("danger", MESSAGES.erroColaborar, MESSAGES.infinity);
                         });

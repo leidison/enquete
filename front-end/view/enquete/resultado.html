@@ -2,24 +2,16 @@
     <li ng-repeat="(key, pergunta) in enquete.perguntas">
         <strong ng-bind="pergunta.descricao"></strong>
         <ul class="list-unstyled">
-            <li ng-repeat="(key, resposta) in pergunta.respostas">
-                <div class="radio">
-                    <label>
-                        <input type="radio"
-                               name="pergunta{{pergunta.id}}"
-                               ng-click="changeResposta(pergunta.id, resposta.id)">{{resposta.descricao}}
-                    </label>
-                </div>
+            <li ng-repeat="(key, resposta) in pergunta.respostas"
+                ng-class="{'bg-success':resposta.maior && resposta.quantidade > 0}">
+                {{resposta.quantidade > 0 ? (resposta.quantidade/pergunta.quantidade * 100 | number : 2 ) : 0}}%
+                {{resposta.descricao}}
             </li>
         </ul>
         <br>
     </li>
 </ol>
 <p>
-    <button class="btn btn-success"
-            ng-click="submit()">
-        Salvar suas respostas
-    </button>
     <a href="/" class="btn btn-default">
         Voltar
     </a>

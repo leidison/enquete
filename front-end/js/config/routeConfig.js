@@ -55,7 +55,7 @@ angular.module("enquete").config(function ($routeProvider, $httpProvider, $locat
             requireLogin: false
         }
     });
-    $routeProvider.when("/enquete/{id}/resultado", {
+    $routeProvider.when("/enquete/:id/resultado", {
         templateUrl: "/view/enquete/resultado.html",
         controller: "resultadoEnqueteCtrl",
         data: {
@@ -68,8 +68,8 @@ angular.module("enquete").config(function ($routeProvider, $httpProvider, $locat
 
 }).run(function ($rootScope, $location, contaAPI) {
     // Assegura as rotas
-
     $rootScope.$on('$routeChangeStart', function (event, toState) {
+        console.log(toState);
         var requireLogin = toState.data.requireLogin;
         var redirectToIfLogged = toState.data.redirectToIfLogged;
 
