@@ -1,23 +1,26 @@
-<a href="/minhas-enquetes/cadastro" class="btn btn-primary"> Criar nova enquete</a>
-<br>
-<br>
-<div infinite-scroll="carregaLista(paginacao)">
-    <div class="panel panel-default" ng-repeat="enquete in enquetes">
-        <div class="panel-body">
-            <strong ng-bind="enquete.titulo"></strong>
-            <br>
-            <small>
-                {{enquete.data | date:'medium'}}
-                &nbsp;&nbsp; {{enquete.perguntas.length}} {{enquete.perguntas.length <= 1 ? "pergunta" : "perguntas"}}
-                &nbsp;&nbsp; {{enquete.ajudas}} {{enquete.ajudas <= 1 ? "pessoa ajudou" : "pessoas ajudaram"}}
-            </small>
-            <br>
-            <br>
-            <a href="/enquete/{{enquete.id}}/resultado" class="btn btn-success"> Visualizer resultado</a>
-            <a ng-href="/minhas-enquetes/{{enquete.id}}/edicao" class="btn btn-default"> Editar</a>
-            <button class="btn btn-danger"
-                    ng-click="deleteEnquete(enquetes, enquete)"> Excluir
-            </button>
-        </div>
-    </div>
-</div>
+<ol>
+    <li ng-repeat="(key, pergunta) in enquete.perguntas">
+        <strong ng-bind="pergunta.descricao"></strong>
+        <ul class="list-unstyled">
+            <li ng-repeat="(key, resposta) in pergunta.respostas">
+                <div class="radio">
+                    <label>
+                        <input type="radio"
+                               name="pergunta{{pergunta.id}}"
+                               ng-click="changeResposta(pergunta.id, resposta.id)">{{resposta.descricao}}
+                    </label>
+                </div>
+            </li>
+        </ul>
+        <br>
+    </li>
+</ol>
+<p>
+    <button class="btn btn-success"
+            ng-click="submit()">
+        Salvar suas respostas
+    </button>
+    <a href="/" class="btn btn-default">
+        Voltar
+    </a>
+</p>

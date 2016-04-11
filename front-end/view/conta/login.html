@@ -6,7 +6,7 @@
         <form name="loginForm" novalidate>
             <div class="form-group" ng-class="{'has-error' : hasError(loginForm.email)}">
                 <label for="email">* E-mail</label>
-                <input type="email" id="email" name="email" class="form-control" ng-model="conta.email" required>
+                <input type="email" id="email" name="email" class="form-control" ng-model="credencial.email" required>
                 <div class="help-block" ng-messages="loginForm.email.$error"
                      ng-show="hasError(loginForm.email)">
                     <div ng-messages-include="/view/templates/message.html"></div>
@@ -15,7 +15,7 @@
             <div class="form-group" ng-class="{'has-error' : hasError(loginForm.password)}">
                 <label for="password">* Senha</label>
                 <input type="password" id="password" name="password" class="form-control"
-                       ng-model="conta.password" required>
+                       ng-model="credencial.password" required>
                 <div class="help-block" ng-messages="loginForm.password.$error"
                      ng-show="hasError(loginForm.password)">
                     <div ng-messages-include="/view/templates/message.html"></div>
@@ -24,7 +24,7 @@
             <p>
                 <button type="submit"
                         class="btn btn-success btn-block"
-                        ng-click="login(conta)"
+                        ng-click="login(credencial)"
                         ng-disabled="disableSubmission(loginForm)">Entrar
                 </button>
             </p>

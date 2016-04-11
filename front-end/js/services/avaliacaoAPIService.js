@@ -1,12 +1,7 @@
-angular.module("enquete").factory("enqueteAPI", [
+angular.module("enquete").factory("avaliacaoAPI", [
     "$resource", "CONSTANTS",
     function ($resource, CONSTANTS) {
-        return $resource(CONSTANTS.baseUrl + "enquete/:id", {}, {
-            getOne: {method: 'GET'},
-            get: {method: 'GET', isArray:true},
-            getMinhas: {method: 'GET', url: CONSTANTS.baseUrl + "enquete/minhas", isArray:true},
-            save: {method: 'POST'},
-            delete: {method: 'DELETE'},
-            update: {method: 'PUT'}
+        return $resource(CONSTANTS.baseUrl + "enquete/:id/avaliacao", {}, {
+            save: {method: 'POST'}
         });
     }]);

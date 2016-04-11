@@ -6,6 +6,10 @@ angular.module("enquete").constant('MESSAGES', {
     default: 5000,
     mostrarNaProximaPagina: {"class": "oneChanceToClose"},
     //------------------------------------------------------------------------------
+    // MENSAGENS DE INFORMAÇÃO
+    //------------------------------------------------------------------------------
+    ficouInteressadoColaborando: "Humm, ficou interessado. Se ficar cansado durante a enquete, os itens que responder serão de grande ajuda.",
+    // ------------------------------------------------------------------------------
     // MENSAGENS DE ERRO
     //------------------------------------------------------------------------------
     error: "<strong>Eita!</strong> O sistema está com problemas. Tente novamente.",
@@ -15,6 +19,8 @@ angular.module("enquete").constant('MESSAGES', {
     erroEdicaoEnquete: "<strong>Eita!</strong> Ocorreram erros durante a edição da enquete.",
     erroListaMinhasEnquetes: "<strong>Eita!</strong> Não conseguimos retornar suas enquetes. Favor tente novamente mais tarde.",
     erroBuscaEnquete: "<strong>Eita!</strong> Não conseguimos retornar a enquete. Favor tente novamente mais tarde.",
+    erroExcluirEnquete: "<strong>Eita!</strong> Não conseguimos excluir a enquete. Favor tente novamente mais tarde.",
+    erroColaborar: "<strong>Eita!</strong> Não conseguimos salvar as respostas. Tente novamente.",
 
     //------------------------------------------------------------------------------
     // MENSAGENS DE ALERTA
@@ -30,5 +36,7 @@ angular.module("enquete").constant('MESSAGES', {
     contaRegistrada: "<strong> Parabéns!</strong> Sua conta foi registrada com sucesso. Você já pode começar a fazer perguntas",
     contaRegistradaSemLogin: "<strong> Parabéns!</strong> Sua conta foi registrada com sucesso. Digite seu login e senha para começar a perguntar",
     sucessoEdicaoEnquete: "<strong> Sucesso.</strong> A enquete foi alterada.",
-    sucessoCadastroEnquete: "<strong> Muito bom!</strong> Agora somente espere suas dúvidas serem respondidas."
+    sucessoCadastroEnquete: "<strong> Muito bom!</strong> Agora somente espere suas dúvidas serem respondidas.",
+    sucessoExcluirEnquete: "<strong> Sucesso.</strong> A enquete foi excluída.",
+    sucessoColaborar: "<strong> Poxa, obrigado!</strong> Você realmente é caridoso. Confira abaixo o resultado da enquete."
 });

@@ -15,7 +15,9 @@
             <br>
             <a href="/enquete/{{enquete.id}}/resultado" class="btn btn-success"> Visualizer resultado</a>
             <a ng-href="/minhas-enquetes/{{enquete.id}}/edicao" class="btn btn-default"> Editar</a>
-            <button class="btn btn-danger" ng-click="deleteEnquete(enquete)"> Excluir</button>
+            <button class="btn btn-danger"
+                    ng-click="deleteEnquete(enquetes, enquete)"> Excluir
+            </button>
         </div>
     </div>
 </div>

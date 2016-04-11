@@ -20,4 +20,16 @@ angular.module("enquete").controller("minhasEnquetesCtrl", [
                 Flash.create('danger', MESSAGES.erroListaMinhasEnquetes);
             });
         };
+
+        $scope.deleteEnquete = function (enquetes, enquete) {
+            Flash.clear();
+            enqueteAPI.delete({id: enquete.id},
+                function () {
+                    Flash.create("success", MESSAGES.sucessoExcluirEnquete);
+                    enquetes.splice(enquetes.indexOf(enquete), 1);
+                }, function (erro) {
+                    Flash.create("danger", MESSAGES.erroExcluirEnquete);
+                }
+            );
+        };
     }]);

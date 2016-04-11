@@ -9,7 +9,8 @@
     </div>
     <fieldset>
         <legend>Dúvidas</legend>
-        <div ng-repeat="(key, pergunta) in enquete.perguntas">
+
+        <div ng-repeat="(keyPergunta, pergunta) in enquete.perguntas">
 
             <div class="panel panel-default" ng-class="{'panel-success' : !pergunta.id && enquete.id}">
                 <div class="panel-heading">
@@ -33,12 +34,12 @@
                     <div class="input-group">
                         <input type="text" name="resposta" class="form-control"
                                placeholder="Digite a resposta"
-                               ng-model="auxResposta.descricao">
+                               ng-model="auxResposta[keyPergunta].descricao">
                         <div class="input-group-btn">
                             <button class="btn btn-default"
-                                    ng-click="addResposta(auxResposta, pergunta.respostas)">
+                                    ng-click="addResposta(pergunta.respostas, keyPergunta)">
                                 <span class="glyphicon glyphicon-plus"
-                                      ng-class="{'glyphicon-ok' : auxResposta.original}"></span>
+                                      ng-class="{'glyphicon-ok' : auxResposta[keyPergunta].original}"></span>
                             </button>
                         </div>
                     </div>
@@ -57,11 +58,11 @@
                             <td ng-bind="resposta.descricao"></td>
                             <td width="110" class="text-center">
                                 <button class="btn btn-primary"
-                                        ng-click="edicaoReposta(resposta, auxResposta)">
+                                        ng-click="edicaoReposta(resposta, keyPergunta)">
                                     <span class="glyphicon glyphicon-edit"></span>
                                 </button>
                                 <button class="btn btn-danger"
-                                        ng-click="removeResposta(key, pergunta.respostas, auxResposta)">
+                                        ng-click="removeResposta(key, pergunta.respostas, keyPergunta)">
                                     <span class="glyphicon glyphicon-trash"></span>
                                 </button>
                             </td>

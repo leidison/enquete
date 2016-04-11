@@ -4,9 +4,12 @@ angular.module("enquete").controller("dadosEnqueteCtrl", [
 
         $rootScope.setTituloPagina("Dados da enquete");
 
-        // Preenche os dados da enquete ou popula com valores default
+        $scope.auxResposta = [];
+
+        // verifica se é edição ou cadastro
+        // se edição
         if ($routeParams.id) {
-            enqueteAPI.get({id: $routeParams.id},
+            enqueteAPI.getOne({id: $routeParams.id},
                 function (enquete) {
                     $scope.enquete = enquete;
                     // buscou com sucesso
@@ -17,30 +20,15 @@ angular.module("enquete").controller("dadosEnqueteCtrl", [
                     $location.path("/minhas-enquetes");
                 });
         } else {
-            $scope.enquete = {
-                titulo: 'teste',
-                perguntas: [
-                    {
-                        descricao: "pergunta1",
-                        respostas: [
-                            {descricao: 'resposta 1'},
-                            {descricao: 'resposta 2'}
-                        ]
-                    },
-                    {
-                        descricao: "pergunta2",
-                        respostas: [
-                            {descricao: 'resposta 2'},
-                            {descricao: 'resposta 3'}
-                        ]
-                    }
-                ]
-            };
+            // é um cadastro. Então, preenche os dados com valor default
+            $scope.enquete = {perguntas: [{respostas: []}]};
         }
 
         $scope.disableButton = false;
 
-        $scope.addResposta = function (auxResposta, respostas) {
+        $scope.addResposta = function (respostas, keyPergunta) {
+            // variavel do formulário de edição de resposta
+            var auxResposta = $scope.auxResposta[keyPergunta];
             // verifica se o campo foi preenchido
             if (auxResposta && auxResposta.descricao) {
                 // verifica se é edicao ou cadastro.
@@ -61,19 +49,20 @@ angular.module("enquete").controller("dadosEnqueteCtrl", [
                     }
                 }
                 // limpa o campo de preenchimento
-                limpaEdicaoPergunta(auxResposta);
+                limpaEdicaoPergunta(keyPergunta);
             }
         };
 
-        $scope.edicaoReposta = function (resposta, objetoEdicao) {
-            // passei campo por campo em vez de um novo objeto,
-            // para evitar de perder o gerencimento do angular
-            objetoEdicao.descricao = resposta.descricao;
-            objetoEdicao.original = resposta;
+        $scope.edicaoReposta = function (resposta, keyPergunta) {
+            // variavel do formulário de edição de resposta
+            $scope.auxResposta[keyPergunta] = {
+                descricao: resposta.descricao,
+                original: resposta
+            };
         };
 
-        $scope.removeResposta = function (key, respostas, auxResposta) {
-            limpaEdicaoPergunta(auxResposta);
+        $scope.removeResposta = function (key, respostas, keyPergunta) {
+            limpaEdicaoPergunta(keyPergunta);
             respostas.splice(key, 1);
         };
 
@@ -129,13 +118,9 @@ angular.module("enquete").controller("dadosEnqueteCtrl", [
             }
         };
 
-        var limpaEdicaoPergunta = function (objetoEdicao) {
-            console.log(objetoEdicao);
-            // passei campo por campo em vez de um novo objeto,
-            // para evitar de perder o gerencimento do angular
-            delete objetoEdicao.id;
-            delete objetoEdicao.descricao;
-            delete objetoEdicao.original;
+        var limpaEdicaoPergunta = function (keyPergunta) {
+            // variavel do formulário de edição de resposta
+            $scope.auxResposta[keyPergunta] = {};
         };
 
         var trataSubmit = function (enquete) {
