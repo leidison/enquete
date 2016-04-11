@@ -3,7 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -17,6 +17,8 @@ class Pergunta
     /**
      * @var integer
      *
+     * @Assert\Blank(groups={"cadastro"})
+     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -25,7 +27,8 @@ class Pergunta
 
     /**
      * @var string
-     * @Assert\NotBlank()
+     *
+     * @Assert\NotBlank(groups={"cadastro","edicao"})
      * @Assert\Type(type="string")
      * @Assert\Length(max=255)
      * @ORM\Column(name="descricao", type="string", length=255, nullable=false)
@@ -45,8 +48,10 @@ class Pergunta
     /**
      * @var Resposta[]
      *
+     * @Assert\NotBlank(groups={"cadastro","edicao"})
+     *
      * @Assert\Valid
-     * @Type("ArrayCollection<AppBundle\Entity\Resposta>")
+     * @JMS\Type("ArrayCollection<AppBundle\Entity\Resposta>")
      * @ORM\OneToMany(targetEntity="Resposta", mappedBy="pergunta", cascade={"persist", "merge", "remove"})
      */
     private $respostas;

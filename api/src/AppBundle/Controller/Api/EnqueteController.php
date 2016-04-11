@@ -30,7 +30,7 @@ class EnqueteController extends FOSRestController
             ->deserialize($request->getContent(), Enquete::class, 'json');
 
         $errors = $this->get('validator')
-            ->validate($enquete);
+            ->validate($enquete, array('cadastro'));
         if (count($errors)) {
             // preparo a resposta de erro
             $view = $this->view($errors, 400);
@@ -57,7 +57,7 @@ class EnqueteController extends FOSRestController
         $enqueteEdicao->setId($request->get('id'));
 
         $errors = $this->get('validator')
-            ->validate($enqueteEdicao);
+            ->validate($enqueteEdicao, array('edicao'));
         if (count($errors)) {
             // preparo a resposta de erro
             $view = $this->view($errors, 400);

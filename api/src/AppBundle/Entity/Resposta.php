@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Resposta
@@ -17,6 +18,8 @@ class Resposta
     /**
      * @var integer
      *
+     * @Assert\Blank(groups={"cadastro"})
+     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -26,7 +29,7 @@ class Resposta
     /**
      * @var string
      *
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"cadastro","edicao"})
      * @Assert\Type(type="string")
      * @Assert\Length(max=255)
      * @ORM\Column(name="descricao", type="string", length=255, nullable=false)
@@ -35,6 +38,8 @@ class Resposta
 
     /**
      * @var integer
+     *
+     * @Assert\Blank(groups={"cadastro","edicao"})
      *
      * @ORM\Column(name="quantidade", type="integer", nullable=false)
      */
