@@ -14,26 +14,26 @@
 
             <div class="panel panel-default" ng-class="{'panel-success' : !pergunta.id && enquete.id}">
                 <div class="panel-heading">
-                    <div ng-class="{'input-group' : enquete.perguntas.length > 1, 'has-error' : hasError(dadosForm['titulo'+key])}">
+                    <label>Descrição</label>
+                    <div ng-class="{'input-group' : enquete.perguntas.length > 1, 'has-error' : hasError(dadosForm['titulo'+keyPergunta])}">
                         <input type="text"
-                               name="titulo{{key}}"
+                               name="titulo{{keyPergunta}}"
                                class="form-control"
-                               placeholder="Digite a descrição da dúvida"
                                ng-model="pergunta.descricao"
-                               ng-required="pergunta.respostas.length > 0">
+                               required>
                         <div class="input-group-btn"
                              ng-if="enquete.perguntas.length > 1">
                             <button class="btn btn-danger"
-                                    ng-click="removeDuvida(key, enquete.perguntas)">
+                                    ng-click="removeDuvida(keyPergunta, enquete.perguntas)">
                                 <span class="glyphicon glyphicon-trash"></span>
                             </button>
                         </div>
                     </div>
                 </div>
                 <div class="panel-body">
+                    <label>Adicionar resposta</label>
                     <div class="input-group">
                         <input type="text" name="resposta" class="form-control"
-                               placeholder="Digite a resposta"
                                ng-model="auxResposta[keyPergunta].descricao">
                         <div class="input-group-btn">
                             <button class="btn btn-default"
@@ -49,7 +49,7 @@
                         <thead>
                         <tr>
                             <th>Respostas</th>
-                            <th>Ação</th>
+                            <th class="text-center">Ação</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -57,11 +57,11 @@
                             ng-class="{'success':!resposta.id && enquete.id}">
                             <td ng-bind="resposta.descricao"></td>
                             <td width="110" class="text-center">
-                                <button class="btn btn-primary"
+                                <button class="btn btn-default btn-sm"
                                         ng-click="edicaoReposta(resposta, keyPergunta)">
-                                    <span class="glyphicon glyphicon-edit"></span>
+                                    <span class="glyphicon glyphicon-edit "></span>
                                 </button>
-                                <button class="btn btn-danger"
+                                <button class="btn btn-default btn-sm"
                                         ng-click="removeResposta(key, pergunta.respostas, keyPergunta)">
                                     <span class="glyphicon glyphicon-trash"></span>
                                 </button>
@@ -85,7 +85,7 @@
     <p>
 
         <button class="btn btn-success"
-                ng-disabled="disableSubmission(dadosForm)"
+                ng-disabled="disableSubmission(dadosForm, enquete)"
                 ng-click="submit(enquete)">
             Salvar informações
         </button>

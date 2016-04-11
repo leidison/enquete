@@ -75,8 +75,19 @@ angular.module("enquete").controller("dadosEnqueteCtrl", [
         };
 
         // chamado ao validar se o botão de submit deve ser desabilitado ou não
-        $scope.disableSubmission = function (form) {
-            return form.$invalid || $scope.disableButton
+        $scope.disableSubmission = function (form, enquete) {
+            if(!enquete){
+                return false;
+            }
+            var qtdRespostas = 0;
+
+            // se alguma pergunta está sem resposta
+            if (enquete.perguntas) {
+                qtdRespostas = enquete.perguntas.every(function (pergunta) {
+                    return pergunta.respostas.length > 0;
+                });
+            }
+            return form.$invalid || $scope.disableButton || enquete.perguntas.length == 0 || !qtdRespostas;
         };
 
         $scope.submit = function (enquete) {
@@ -105,7 +116,6 @@ angular.module("enquete").controller("dadosEnqueteCtrl", [
             } else {
                 enqueteAPI.save({}, enquete,
                     function success(response) {
-                        $scope.disableButton = false;
                         Flash.create('success', MESSAGES.sucessoCadastroEnquete, MESSAGES.default, MESSAGES.mostrarNaProximaPagina);
                         $location.path("/minhas-enquetes");
                     },
