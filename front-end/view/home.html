@@ -21,16 +21,17 @@
                 <br>
                 {{enquete.perguntas.length}} {{enquete.perguntas.length <= 1 ? "pergunta" : "perguntas"}}
                 &nbsp;&nbsp; {{
-                enquete.ajudas == 0 ? "Ninguem ajudou ainda" : (
+                !enquete.ajudas ? "Ninguem ajudou ainda" : (
                 enquete.ajudas + (enquete.ajudas == 1 ? " pessoa ajudou" : " pessoas ajudaram")
                 )
                 }}
             </small>
             <br>
             <br>
+
             <a href="/enquete/{{enquete.id}}/colaborando" class="btn "
-               ng-class="{'btn-primary':enquete.ajudas == 0, 'btn-success':enquete.ajudas > 0}">
-                {{enquete.ajudas == 0 ? "Seja o primeiro a ajudar" : "Eu também quero ajudar"}}
+               ng-class="{'btn-primary':!enquete.ajudas, 'btn-success':!!enquete.ajudas}">
+                {{!enquete.ajudas ? "Seja o primeiro a ajudar" : "Eu também quero ajudar"}}
             </a>
         </div>
     </div>
