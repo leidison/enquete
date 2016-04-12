@@ -37,9 +37,11 @@ class EnqueteController extends FOSRestController
             $view = $this->view($errors, 400);
         } else {
             $user = $this->container->get('security.context')->getToken()->getUser();
-            $resultado = $this->get('enquete_business')->cadastro($enquete, $user);
-            $view = $this->view(array('success' => true));
+            $this->get('enquete_business')->cadastro($enquete, $user);
+
+            $view = $this->view(array('success' => true, 'enquete' => $enquete->getId()));
         }
+
         $view->setFormat('json');
         return $this->handleView($view);
 

@@ -30,7 +30,10 @@ class Pergunta
      *
      * @Assert\NotBlank(groups={"cadastro","edicao"})
      * @Assert\Type(type="string")
-     * @Assert\Length(max=255)
+     * @Assert\Length(
+     *      max = 255,
+     *     groups={"cadastro","edicao"}
+     * )
      * @ORM\Column(name="descricao", type="string", length=255, nullable=false)
      */
     private $descricao;

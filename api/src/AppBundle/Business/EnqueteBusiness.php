@@ -10,12 +10,34 @@ class EnqueteBusiness extends Base
 
     public function cadastro(Enquete $enquete, User $user)
     {
+
         $enquete->setUser($user);
 
-        $this->getManager()->merge($enquete);
+        $em = $this->getManager();
+        $conn = $em->getConnection();
+        $conn->beginTransaction();
+        try {
+            $perguntas = $enquete->getPerguntas();
+            // removo as perguntas para poder persistir a enquete tranquilamente
+            $enquete->setPerguntas(null);
+            // faço persist para poder utilizar o id
+            $em->persist($enquete);
+            // gravo as alterações
+            $em->flush();
 
-        $this->getManager()->flush();
+            // faço o clone para perder o mapeamento do doctrine
+            $enquete = clone $enquete;
+            $enquete->setPerguntas($perguntas);
+            // gravo as enquetes
+            $em->merge($enquete);
 
+            $em->flush();
+
+            $conn->commit();
+        } catch (\Exception $e) {
+            $conn->rollback();
+            throw $e;
+        }
     }
 
     /**

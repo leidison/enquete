@@ -29,7 +29,10 @@ class Enquete
      *
      * @Assert\NotBlank(groups={"cadastro","edicao"})
      * @Assert\Type(type="string")
-     * @Assert\Length(max=255)
+     * @Assert\Length(
+     *      max = 255,
+     *     groups={"cadastro","edicao"}
+     * )
      * @ORM\Column(name="titulo", type="string", length=255, nullable=false)
      */
     private $titulo;
@@ -184,6 +187,18 @@ class Enquete
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set perguntas
+     *
+     * @param $perguntas
+     * @return $this
+     */
+    public function setPerguntas($perguntas)
+    {
+        $this->perguntas = $perguntas;
+        return $this;
     }
 
     /**
