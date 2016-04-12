@@ -2,6 +2,8 @@
 
 namespace AppBundle\Tests\Controller;
 
+use AppBundle\Tests\Util\ContaUtil;
+use AppBundle\Tests\Util\HeaderUtil;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 
@@ -13,22 +15,35 @@ class ContaControllerTest extends WebTestCase
      */
     private $client;
 
-    public function getCredencial()
-    {
-        return array(
-            "grant_type" => "password",
-            "client_id" => "1_3bcbxd9e24g0gk4swg0kwgcwg4o8k8g4g888kwc44gcc0gwwk4",
-            "client_secret" => "4ok2x70rlfokc8g0wws8c8kwcokw80k44sg48goc0ok4w0so0k",
-            "username" => "leidison.sb@gmail.com",
-            "password" => "123456"
-        );
-    }
+    /**
+     * @var ContaUtil
+     */
+    private $contaUtil;
+    /**
+     * @var HeaderUtil
+     */
+    private $headerUtil;
 
     public function setUp()
     {
         $this->client = static::createClient();
+        $this->contaUtil = new ContaUtil($this->client);
+        $this->headerUtil = new HeaderUtil($this->client);
     }
 
+    public function getConta()
+    {
+        return $this->contaUtil;
+    }
+
+    public function getHeader()
+    {
+        return $this->headerUtil;
+    }
+
+    /**
+     * Objetiva o sucesso do cadastro
+     */
     public function testLegacyCadastro()
     {
 
@@ -39,31 +54,21 @@ class ContaControllerTest extends WebTestCase
             'plainPassword' => $password
         );
 
-        $this->client->request(
-            'POST',
-            '/api/conta',
-            // parameters
-            array(),
-            // files
-            array(),
-            // headers
-            array(),
-            // body request (json)
-            json_encode($dados)
-        );
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = $this->getConta()->cadastro($dados);
 
         $this->assertTrue($this->client->getResponse()->isSuccessful());
-        $this->assertGreaterThan(array('success' => true), $response);
+        $this->assertTrue(is_object($response));
+        $this->assertTrue($response->success);
 
     }
 
+    /**
+     * Objetiva o sucesso do login
+     */
     public function testLegacyLogin()
     {
 
-        $content = $this->login($this->getCredencial());
-
-        $response = json_decode($content);
+        $response = $this->getConta()->login();
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         $this->assertTrue(!empty($response->access_token));
@@ -75,15 +80,14 @@ class ContaControllerTest extends WebTestCase
         );
     }
 
+    /**
+     * Objetiva mensagem de erro no login
+     */
     public function testLegacyLoginError()
     {
-
-        $credencial = $this->getCredencial();
+        $credencial = $this->getConta()->getCredencial();
         unset($credencial['grant_type']);
-
-        $content = $this->login($credencial);
-
-        $response = json_decode($content);
+        $response = $this->getConta()->login(false, $credencial);
 
         $this->assertTrue(!empty($response->error));
         $this->assertTrue(
@@ -92,26 +96,5 @@ class ContaControllerTest extends WebTestCase
                 'application/json'
             )
         );
-    }
-
-    public function login($credencial)
-    {
-        
-        $this->client->request(
-            'POST',
-            '/api/oauth/v2/token',
-            // parameters
-            array(),
-            // files
-            array(),
-            // headers
-            array(
-                'CONTENT_TYPE' => 'application/json',
-            ),
-            // body request (json)
-            json_encode($credencial)
-        );
-
-        return $this->client->getResponse()->getContent();
     }
 }

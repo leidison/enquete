@@ -2,6 +2,8 @@
 
 namespace AppBundle\Tests\Controller;
 
+use AppBundle\Tests\Util\ContaUtil;
+use AppBundle\Tests\Util\HeaderUtil;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 
@@ -13,9 +15,20 @@ class EnqueteControllerTest extends WebTestCase
      */
     private $client;
 
+    /**
+     * @var ContaUtil
+     */
+    private $contaUtil;
+    /**
+     * @var HeaderUtil
+     */
+    private $headerUtil;
+
     public function setUp()
     {
         $this->client = static::createClient();
+        $this->contaUtil = new ContaUtil($this->client);
+        $this->headerUtil = new HeaderUtil($this->client);
     }
 
     /**
@@ -90,7 +103,7 @@ class EnqueteControllerTest extends WebTestCase
     }
 
     /**
-     * Objetiva o erro da edição sem passar um id ou com um id com tipo invalido
+     * Objetiva o erro da edição com id invalido ou inxistente
      */
     public function testLegacyEdicaoTratandoId()
     {
@@ -152,80 +165,33 @@ class EnqueteControllerTest extends WebTestCase
     }
 
     /**
-     * Objetiva mensagens de valicaçao quando os ids das perguntas
-     * não pertencerem (ou não existirem) para a enquete.
-     * Ou quando a resposta não existir ou não pertencer a pergunta
-     */
-    public function testLegacyEdicaoComIdsIncorretos()
-    {
-
-        /**
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         */
-    }
-
-
-    /**
      * Objetiva o sucesso da exclusao
      */
     public function testLegacyExclusao()
     {
+        $content = $this->login($this->getCredencial());
+        $token = json_decode($content);
 
-        /**
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         */
+        $response = $this->cadastro();
+
+        $this->client->request(
+            'DELETE',
+            '/api/enquete/' . $response->enquete,
+            // parameters
+            array(),
+            // files
+            array(),
+            // headers
+            $this->getHeaderToken($token)
+        );
+        $responseExclusao = json_decode($this->client->getResponse()->getContent());
+
+        $enquete = $this->getRepository()->find($response->enquete);
+
+        $this->assertTrue(is_object($responseExclusao));
+        $this->assertTrue($responseExclusao->success);
+        $this->assertTrue(is_null($enquete));
+
     }
 
     /**
@@ -233,45 +199,51 @@ class EnqueteControllerTest extends WebTestCase
      */
     public function testLegacyExclusaoTrantandoIds()
     {
+        $response = $this->cadastro();
 
-        /**
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         */
     }
 
-
-    public function cadastro()
+    public function exclusao($id, $loginDiferente = false)
     {
-        $template = $this->getTemplate();
-        $content = $this->manter($template);
-        $response = json_decode($content);
-        return $response;
+        $credencial = $this->getCredencial(true);
+        if ($loginDiferente) {
+            $content = $this->cadastrarUsuario($dadosUsuario);
+            $credencial['username'] = $dadosUsuario['username'];
+            $credencial['password'] = $dadosUsuario['password'];
+        }
+
+        $content = $this->login();
+        $token = json_decode($content);
+
+        $response = $this->cadastro();
+
+        $this->client->request(
+            'DELETE',
+            '/api/enquete/' . $response->enquete,
+            // parameters
+            array(),
+            // files
+            array(),
+            // headers
+            $this->getHeaderToken($token)
+        );
+        $responseExclusao = json_decode($this->client->getResponse()->getContent());
+
+        $enquete = $this->getRepository()->find($response->enquete);
+
+        $this->assertTrue(is_object($responseExclusao));
+        $this->assertTrue($responseExclusao->success);
+        $this->assertTrue(is_null($enquete));
+    }
+
+    public function testLegacyMinhasEnquetes()
+    {
+
+    }
+
+    public function testLegacyEnquetes()
+    {
+
     }
 
     public function manterTratandoDescricoesETitulo($id = null)
@@ -518,5 +490,18 @@ class EnqueteControllerTest extends WebTestCase
                 'respostas' => array_fill(0, rand(5, 10), array('descricao' => uniqid('TESTE resposta ')))
             ))
         );
+    }
+
+    public function getRepository()
+    {
+        return $this->client->getContainer()->get('doctrine')->getRepository('AppBundle\Entity\Enquete');
+    }
+
+    public function cadastro()
+    {
+        $template = $this->getTemplate();
+        $content = $this->manter($template);
+        $response = json_decode($content);
+        return $response;
     }
 }
