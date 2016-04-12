@@ -69,6 +69,7 @@ class ContaControllerTest extends WebTestCase
     {
 
         $response = $this->getConta()->login();
+
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         $this->assertTrue(!empty($response->access_token));
@@ -87,7 +88,7 @@ class ContaControllerTest extends WebTestCase
     {
         $credencial = $this->getConta()->getCredencial();
         unset($credencial['grant_type']);
-        $response = $this->getConta()->login(false, $credencial);
+        $response = $this->getConta()->login($credencial);
 
         $this->assertTrue(!empty($response->error));
         $this->assertTrue(

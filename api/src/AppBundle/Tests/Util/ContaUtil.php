@@ -24,34 +24,35 @@ class ContaUtil
 
     /**
      * Função que autentica o usuário e retorna o token de acesso
-     * @param $usuarioNovo
-     * @param $credencial
+     * @param $novaCredencial
      * @return string
      */
-    public function login($usuarioNovo = false, $credencial = null)
+    public function login($credencial = false)
     {
-        $credencial = $credencial ? $credencial : $this->getCredencial();
-
-        if ($usuarioNovo) {
+        if (!is_bool($credencial) && !is_array($credencial)) {
+            var_dump('$credencial com valor inexperado');
+            var_dump($credencial);
+            die;
+        }
+        // se for para autenticar ocm um novo usuário
+        if ($credencial === true) {
+            $credencial = $this->getCredencial();
+            $credencial['username'] = uniqid('teste.dinamico') . '@gmail.com';
+        } else if (!is_array($credencial)) {
+            $credencial = $this->getCredencial();
+            
+        }
+        // verifica se existe o usuário para a credencial selecionada
+        $usuario = $this->getRepository()->findOneBy(array('email' => $credencial['username']));
+        if (!$usuario) {
             $usuario = array(
-                'email' => uniqid('teste.') . '@gmail.com',
+                'email' => $credencial['username'],
                 'password' => 123456,
                 'plainPassword' => 123456
             );
             $this->cadastro($usuario);
-            $credencial['username'] = $usuario['email'];
-        } else {
-            // verifica se usuário default existe
-            $usuario = $this->getRepository()->findOneBy(array('email' => $credencial['username']));
-            if (!$usuario) {
-                $usuario = array(
-                    'email' => $credencial['username'],
-                    'password' => 123456,
-                    'plainPassword' => 123456
-                );
-                $this->cadastro($usuario);
-            }
         }
+
         $this->client->request(
             'POST',
             '/api/oauth/v2/token',
@@ -65,9 +66,9 @@ class ContaUtil
             json_encode($credencial)
         );
 
-        $response = json_decode($this->client->getResponse()->getContent());
+        $token = json_decode($this->client->getResponse()->getContent());
 
-        return $response;
+        return $token;
     }
 
     public function getCredencial()

@@ -31,455 +31,16 @@ class EnqueteControllerTest extends WebTestCase
         $this->headerUtil = new HeaderUtil($this->client);
     }
 
-    /**
-     * Objetiva o cadastro com sucesso
-     */
-    public function testLegacyCadastro()
+    public function getConta()
     {
-        $response = $this->cadastro();
-
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
-        $this->assertTrue(is_object($response));
-        $this->assertTrue($response->success == true);
-        $this->assertTrue(is_int($response->enquete) && $response->enquete > 0);
-        $this->assertTrue(
-            $this->client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
+        return $this->contaUtil;
     }
 
-    /**
-     * Objetiva mensagem de conteudo restrito
-     */
-    public function testLegacyCadastroSemToken()
+    public function getHeader()
     {
-        $this->manterSemToken();
+        return $this->headerUtil;
     }
 
-    /**
-     * Objetiva mensagens de validação quando a enquete está sem perguntas
-     * ou quando uma das perguntas está sem respostas
-     */
-    public function testLegacyCadastroSemRespostaOuPergunta()
-    {
-        $this->manterSemRespostaOuPergunta();
-    }
-
-    /**
-     * Objetiva mensagens de validação quando não existe titulo ou descricoes das perguntas/respostas,
-     * quando o tamanho das descricoes ou titulo for maior que o tamanho correto.
-     * Almeja também, a mensagem de sucesso quando o titulo ou as descricoes das perguntas/resposta
-     * estiverem com tamanho máximo permitido
-     */
-    public function testLegacyCadastroTratandoDescricoesETitulo()
-    {
-        $this->manterTratandoDescricoesETitulo();
-    }
-
-    /**
-     * Objetiva o sucesso da edição
-     */
-    public function testLegacyEdicao()
-    {
-        $template = $this->getTemplate();
-        $response = $this->cadastro();
-
-        $template['id'] = $response->enquete;
-
-        $contentEdicao = $this->manter($template, true, true);
-        $responseEdicao = json_decode($contentEdicao);
-
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
-        $this->assertTrue(is_object($responseEdicao));
-        $this->assertTrue($responseEdicao->success == true);
-        $this->assertTrue(
-            $this->client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-    }
-
-    /**
-     * Objetiva o erro da edição com id invalido ou inxistente
-     */
-    public function testLegacyEdicaoTratandoId()
-    {
-        $template = $this->getTemplate();
-        // faço o cadastro para uma pessoa diferente
-        $contentCadastro = $this->manter($template, true, false, array(
-            'username' => uniqid() . 'email.teste@gmail.com',
-            'password' => 123456,
-        ));
-
-        $responseCadastro = json_decode($contentCadastro);
-
-        $template['id'] = $responseCadastro->enquete;
-
-        // tento editar com o usuário default dos nossos testes
-        $contentEdicaoIdPessoaDiferente = $this->manter($template, true, true);
-
-        // verificando a edicao de uma enquete com id no formato incorreto
-        $response = $this->cadastro();
-        $template['id'] = 0;
-        $contentEdicaoIdErrado = $this->manter($template, true, true);
-
-        $responseEdicaoIdPessoaDiferente = json_decode($contentEdicaoIdPessoaDiferente);
-        $responseEdicaoIdErrado = json_decode($contentEdicaoIdErrado);
-
-        $this->assertTrue($responseEdicaoIdErrado == null);
-        $this->assertTrue($responseEdicaoIdPessoaDiferente == null);
-    }
-
-    /**
-     * Objetiva mensagem de conteudo restrito
-     */
-    public function testLegacyEdicaoSemToken()
-    {
-        $response = $this->cadastro();
-        $this->manterSemToken($response->enquete);
-    }
-
-    /**
-     * Objetiva mensagens de validação quando a enquete está sem perguntas
-     * ou quando uma das perguntas está sem respostas
-     */
-    public function testLegacyEdicaoSemRespostaOuPergunta()
-    {
-        $response = $this->cadastro();
-        $this->manterSemRespostaOuPergunta($response->enquete);
-    }
-
-    /**
-     * Objetiva mensagens de validação quando não existe titulo ou descricoes das perguntas/respostas,
-     * quando o tamanho das descricoes ou titulo for maior que o tamanho correto.
-     * Almeja também, a mensagem de sucesso quando o titulo ou as descricoes das perguntas/resposta
-     * estiverem com tamanho máximo permitido
-     */
-    public function testLegacyEdicaoTratandoDescricoesETitulo()
-    {
-        $response = $this->cadastro();
-        $this->manterTratandoDescricoesETitulo($response->enquete);
-    }
-
-    /**
-     * Objetiva o sucesso da exclusao
-     */
-    public function testLegacyExclusao()
-    {
-        $content = $this->login($this->getCredencial());
-        $token = json_decode($content);
-
-        $response = $this->cadastro();
-
-        $this->client->request(
-            'DELETE',
-            '/api/enquete/' . $response->enquete,
-            // parameters
-            array(),
-            // files
-            array(),
-            // headers
-            $this->getHeaderToken($token)
-        );
-        $responseExclusao = json_decode($this->client->getResponse()->getContent());
-
-        $enquete = $this->getRepository()->find($response->enquete);
-
-        $this->assertTrue(is_object($responseExclusao));
-        $this->assertTrue($responseExclusao->success);
-        $this->assertTrue(is_null($enquete));
-
-    }
-
-    /**
-     * Objetiva a mensagem de erro quando utilizado um id incorreto
-     */
-    public function testLegacyExclusaoTrantandoIds()
-    {
-        $response = $this->cadastro();
-
-    }
-
-    public function exclusao($id, $loginDiferente = false)
-    {
-        $credencial = $this->getCredencial(true);
-        if ($loginDiferente) {
-            $content = $this->cadastrarUsuario($dadosUsuario);
-            $credencial['username'] = $dadosUsuario['username'];
-            $credencial['password'] = $dadosUsuario['password'];
-        }
-
-        $content = $this->login();
-        $token = json_decode($content);
-
-        $response = $this->cadastro();
-
-        $this->client->request(
-            'DELETE',
-            '/api/enquete/' . $response->enquete,
-            // parameters
-            array(),
-            // files
-            array(),
-            // headers
-            $this->getHeaderToken($token)
-        );
-        $responseExclusao = json_decode($this->client->getResponse()->getContent());
-
-        $enquete = $this->getRepository()->find($response->enquete);
-
-        $this->assertTrue(is_object($responseExclusao));
-        $this->assertTrue($responseExclusao->success);
-        $this->assertTrue(is_null($enquete));
-    }
-
-    public function testLegacyMinhasEnquetes()
-    {
-
-    }
-
-    public function testLegacyEnquetes()
-    {
-
-    }
-
-    public function manterTratandoDescricoesETitulo($id = null)
-    {
-        $template = $this->getTemplate();
-
-        if ($id) {
-            $template['id'] = $id;
-            $edicao = true;
-        } else {
-            $edicao = false;
-        }
-
-        $str256 = str_repeat('a', 256);
-        $str255 = str_repeat('a', 255);
-
-        $template['titulo'] = $str256;
-        $template['perguntas'][0]['descricao'] = $str256;
-        $template['perguntas'][0]['respostas'][0]['descricao'] = $str256;
-        $contentString256 = $this->manter($template, true, $edicao);
-
-        $template['titulo'] = $str255;
-        $template['perguntas'][0]['descricao'] = $str255;
-        $template['perguntas'][0]['respostas'][0]['descricao'] = $str255;
-        $contentString255 = $this->manter($template, true, $edicao);
-
-        unset($template['titulo']);
-        unset($template['perguntas'][0]['descricao']);
-        unset($template['titulo']);
-        unset($template['perguntas'][0]['respostas'][0]['descricao']);
-        $contentSemDescricaoTitulo = $this->manter($template, true, $edicao);
-
-        $response256 = json_decode($contentString256);
-        $response255 = json_decode($contentString255);
-        $responseSemDescricaoTitulo = json_decode($contentSemDescricaoTitulo);
-
-        $this->assertTrue(is_array($response256));
-        $this->assertTrue(is_object($response255));
-        $this->assertTrue($response255->success == true);
-
-        $this->assertTrue($response256[0]->property_path == 'titulo');
-        $this->assertTrue($response256[1]->property_path == 'perguntas[0].descricao');
-        $this->assertTrue($response256[2]->property_path == 'perguntas[0].respostas[0].descricao');
-
-        $this->assertTrue($responseSemDescricaoTitulo[0]->property_path == 'titulo');
-        $this->assertTrue($responseSemDescricaoTitulo[1]->property_path == 'perguntas[0].descricao');
-        $this->assertTrue($responseSemDescricaoTitulo[2]->property_path == 'perguntas[0].respostas[0].descricao');
-
-        $this->assertTrue(
-            $this->client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-    }
-
-    public function manterSemRespostaOuPergunta($id = null)
-    {
-        $templateOriginal = $this->getTemplate();
-
-        if ($id) {
-            $templateOriginal['id'] = $id;
-            $edicao = true;
-        } else {
-            $edicao = false;
-        }
-
-        $template = $templateOriginal;
-        unset($template['perguntas']);
-        $contentSemPergunta = $this->manter($template, true, $edicao);
-
-        $template = $templateOriginal;
-        unset($template['perguntas'][0]['respostas']);
-        $contentSemResposta = $this->manter($template, true, $edicao);
-
-        $responseSemPergunta = json_decode($contentSemPergunta);
-        $responseSemResposta = json_decode($contentSemResposta);
-
-        $this->assertTrue(is_array($responseSemPergunta));
-        $this->assertTrue(is_array($responseSemResposta));
-
-        $this->assertTrue($responseSemPergunta[0]->property_path == 'perguntas');
-        $this->assertTrue($responseSemResposta[0]->property_path == 'perguntas[0].respostas');
-
-        $this->assertTrue(
-            $this->client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-    }
-
-    public function manterSemToken($id = null)
-    {
-        $template = $this->getTemplate();
-
-        if ($id) {
-            $template['id'] = $id;
-            $edicao = true;
-        } else {
-            $edicao = false;
-        }
-
-        $content = $this->manter($template, false, $edicao);
-        $response = json_decode($content);
-
-        $this->assertTrue(is_object($response));
-        $this->assertTrue($response->error == 'access_denied');
-
-        $this->assertTrue(
-            $this->client->getResponse()->headers->contains(
-                'Content-Type',
-                'application/json'
-            )
-        );
-    }
-
-
-    /**
-     * Função que autentica o usuário e retorna o token de acesso
-     * @param $credencial
-     * @return string
-     */
-    public function login($credencial)
-    {
-
-        $this->client->request(
-            'POST',
-            '/api/oauth/v2/token',
-            // parameters
-            array(),
-            // files
-            array(),
-            // headers
-            $this->getHeaders(),
-            // body request (json)
-            json_encode($credencial)
-        );
-
-        return $this->client->getResponse()->getContent();
-    }
-
-    /**
-     * Para facilitar o cadastro de enquetes
-     *
-     * @param $enquete
-     * @param bool $comToken
-     * @return string
-     */
-    public function manter($enquete, $comToken = true, $edicao = false, $dadosUsuario = null)
-    {
-        $credencial = $this->getCredencial();
-        if ($dadosUsuario) {
-            $content = $this->cadastrarUsuario($dadosUsuario);
-            $credencial['username'] = $dadosUsuario['username'];
-            $credencial['password'] = $dadosUsuario['password'];
-        }
-
-        if ($comToken) {
-            $content = $this->login($credencial);
-            $token = json_decode($content);
-            $headers = $this->getHeaders($token);
-        } else {
-            $headers = $this->getHeaders();
-
-        }
-        $this->client->request(
-            $edicao ? 'PUT' : 'POST',
-            // verifico se tem o id também, pq posso testar uma edicao sem passar o id
-            '/api/enquete' . ($edicao && isset($enquete['id']) ? "/{$enquete['id']}" : ''),
-            // parameters
-            array(),
-            // files
-            array(),
-            // headers
-            $headers
-            ,
-            // body request (json)
-            json_encode($enquete)
-        );
-        return $this->client->getResponse()->getContent();
-    }
-
-    public function getCredencial()
-    {
-        return array(
-            "grant_type" => "password",
-            "client_id" => "1_3bcbxd9e24g0gk4swg0kwgcwg4o8k8g4g888kwc44gcc0gwwk4",
-            "client_secret" => "4ok2x70rlfokc8g0wws8c8kwcokw80k44sg48goc0ok4w0so0k",
-            "username" => "leidison.sb@gmail.com",
-            "password" => "123456"
-        );
-    }
-
-    public function cadastrarUsuario($user)
-    {
-        // verificando a edição de uma enquete feita por outra pessoa
-        $password = 123456;
-        $dados = array(
-            'email' => $user['username'],
-            'password' => $user['password'],
-            'plainPassword' => $user['password']
-        );
-
-        $this->client->request(
-            'POST',
-            '/api/conta',
-            // parameters
-            array(),
-            // files
-            array(),
-            // headers
-            array(),
-            // body request (json)
-            json_encode($dados)
-        );
-        $usuarioCadastrado = json_decode($this->client->getResponse()->getContent());
-
-        $this->assertTrue($usuarioCadastrado->success);
-    }
-
-    public function getHeaders($token = null)
-    {
-        $headers = array(
-            'CONTENT_TYPE' => 'application/json',
-        );
-        if ($token) {
-            $headers = array_merge($headers, $this->getHeaderToken($token));
-        }
-        return $headers;
-    }
-
-    public function getHeaderToken($token)
-    {
-        return array('HTTP_Authorization' => ucfirst($token->token_type) . " {$token->access_token}");
-    }
 
     public function getTemplate()
     {
@@ -497,11 +58,473 @@ class EnqueteControllerTest extends WebTestCase
         return $this->client->getContainer()->get('doctrine')->getRepository('AppBundle\Entity\Enquete');
     }
 
-    public function cadastro()
+    public function cadastro($enquete, $autenticado = true, $credencial = false)
+    {
+
+        if ($autenticado) {
+            $token = $this->getConta()->login($credencial);
+        } else {
+            $token = null;
+        }
+
+        $headers = $this->getHeader()->getHeaders($token);
+
+        $this->client->request(
+            'POST',
+            '/api/enquete',
+            // parameters
+            array(),
+            // files
+            array(),
+            // headers
+            $headers
+            ,
+            // body request (json)
+            json_encode($enquete)
+        );
+        $restponse = json_decode($this->client->getResponse()->getContent());
+        return $restponse;
+    }
+
+    public function edicao($enquete, $autenticado = true, $outroUsuario = false)
+    {
+
+        if ($autenticado) {
+            $token = $this->getConta()->login($outroUsuario);
+        } else {
+            $token = null;
+        }
+        $headers = $this->getHeader()->getHeaders($token);
+
+        $this->client->request(
+            'PUT',
+            // verifico se tem o id também, pq posso testar uma edicao sem passar o id
+            '/api/enquete' . (isset($enquete['id']) ? "/{$enquete['id']}" : ''),
+            // parameters
+            array(),
+            // files
+            array(),
+            // headers
+            $headers
+            ,
+            // body request (json)
+            json_encode($enquete)
+        );
+        $restponse = json_decode($this->client->getResponse()->getContent());
+        return $restponse;
+    }
+
+    public function getEnquete($id = null, $token = null)
+    {
+        if ($token) {
+            $complementoUrl = '/minhas';
+        } else if ($id) {
+            $complementoUrl = "/{$id}";
+        } else {
+            $complementoUrl = '';
+        }
+        $this->client->request(
+            'GET',
+            // verifico se tem o id também, pq posso testar uma edicao sem passar o id
+            '/api/enquete' . $complementoUrl,
+            // parameters
+            array(),
+            // files
+            array(),
+            // headers
+            $this->getHeader()->getHeaders($token)
+        );
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        return $response;
+    }
+
+    /**
+     * Objetiva o cadastro com sucesso
+     */
+    public function testLegacyCadastro()
+    {
+        $response = $this->cadastro($this->getTemplate());
+        $this->assertTrue($this->client->getResponse()->isSuccessful());
+        $this->assertTrue(is_object($response));
+        $this->assertTrue($response->success == true);
+        $this->assertTrue(is_int($response->enquete) && $response->enquete > 0);
+        $this->assertTrue(
+            $this->client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+    }
+
+    /**
+     * Objetiva mensagem de conteudo restrito
+     */
+    public function testLegacyCadastroSemToken()
+    {
+        $response = $this->cadastro($this->getTemplate(), false);
+        $this->assertTrue(is_object($response));
+        $this->assertTrue($response->error == 'access_denied');
+        $this->assertTrue(
+            $this->client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+    }
+
+    /**
+     * Objetiva mensagens de validação quando a enquete está sem perguntas
+     * ou quando uma das perguntas está sem respostas
+     */
+    public function testLegacyCadastroSemRespostaOuPergunta()
+    {
+        $this->manterSemRespostaOuPergunta($this->getTemplate());
+    }
+
+    /**
+     * Objetiva mensagens de validação quando não existe titulo ou descricoes das perguntas/respostas,
+     * quando o tamanho das descricoes ou titulo for maior que o tamanho correto.
+     * Almeja também, a mensagem de sucesso quando o titulo ou as descricoes das perguntas/resposta
+     * estiverem com tamanho máximo permitido
+     */
+    public function testLegacyCadastroTratandoDescricoesETitulo()
+    {
+        $this->manterTratandoDescricoesETitulo($this->getTemplate());
+    }
+
+    /**
+     * Objetiva o sucesso da listagem paginada de enquetes
+     */
+    public function testLegacyGet()
     {
         $template = $this->getTemplate();
-        $content = $this->manter($template);
-        $response = json_decode($content);
-        return $response;
+        // 10 é o valor default da paginação.
+        // então eu estou cadastrando 11 para testar
+        for ($i = 0; $i < 11; $i++) {
+            $this->cadastro($template);
+        }
+        $response = $this->getEnquete();
+        $this->assertTrue($this->client->getResponse()->isSuccessful());
+        $this->assertTrue(count($response) == 10);
+        $this->assertTrue(
+            $this->client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+    }
+
+    /**
+     * Objetiva o sucesso da listagem paginada de enquetes
+     */
+    public function testLegacyGetOne()
+    {
+        $template = $this->getTemplate();
+
+        $response = $this->cadastro($template);
+
+        $response = $this->getEnquete($response->enquete);
+
+        $this->assertTrue($this->client->getResponse()->isSuccessful());
+        $this->assertTrue(isset($response['id']));
+        $this->assertTrue(
+            $this->client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+    }
+
+    /**
+     * Objetiva o sucesso da listagem paginada de enquetes de um usuário
+     */
+    public function testLegacyMinhasEnquetes()
+    {
+        $template = $this->getTemplate();
+        // 10 é o valor default da paginação.
+        // então eu estou cadastrando 11 para testar
+
+        $credencial = $this->getConta()->getCredencial();
+        $credencial['username'] = uniqid('teste.minhas') . '@gmail.com';
+
+        $token = $this->getConta()->login($credencial);
+
+        // cadastro so 4 para ver se está trazendo apenas as enquetes do novo usuário
+        for ($i = 0; $i < 4; $i++) {
+            $this->cadastro($template, true, $credencial);
+        }
+        $response = $this->getEnquete(null, $token);
+
+        $this->assertTrue($this->client->getResponse()->isSuccessful());
+        $this->assertTrue(count($response) == 4);
+        $this->assertTrue(
+            $this->client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+        // cadastro mais 7 para ver se está trazendo paginado. Pois o limite é 10
+        for ($i = 0; $i < 7; $i++) {
+            $this->cadastro($template, true, $credencial);
+        }
+        $response = $this->getEnquete(null, $token);
+
+        $this->assertTrue($this->client->getResponse()->isSuccessful());
+        $this->assertTrue(count($response) == 10);
+        $this->assertTrue(
+            $this->client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+
+
+    }
+
+    /**
+     * Objetiva o sucesso da edição
+     */
+    public function testLegacyEdicao()
+    {
+        $response = $this->cadastro($this->getTemplate());
+
+        $enquete = $this->getEnquete($response->enquete);
+
+        $responseEdicao = $this->edicao($enquete);
+
+        $this->assertTrue($this->client->getResponse()->isSuccessful());
+        $this->assertTrue(is_object($responseEdicao));
+        $this->assertTrue($responseEdicao->success == true);
+        $this->assertTrue(
+            $this->client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+    }
+
+    /**
+     * Objetiva o erro da edição com id invalido ou inxistente
+     */
+    public function testLegacyEdicaoTratandoId()
+    {
+        // cadastra uma enquete para um usuário diferente do default
+        $response = $this->cadastro($this->getTemplate(), true, true);
+        // pego um template
+        $enquete = $this->getTemplate();
+
+        // seto o id no template
+        $enquete['id'] = $response->enquete;
+        // tento editar a enquete com o usuário default
+        $responseOutroUsu = $this->edicao($enquete);
+
+        // id incorreto
+        $enquete['id'] = 0;
+        $responseIdIncorreto = $this->edicao($enquete);
+
+        $this->assertTrue(is_null($responseOutroUsu));
+        $this->assertTrue(is_null($responseIdIncorreto));
+    }
+
+    /**
+     * Objetiva mensagem de conteudo restrito
+     */
+    public function testLegacyEdicaoSemToken()
+    {
+        $enquete = $this->getTemplate();
+        $response = $this->cadastro($enquete);
+        // seto o id no template
+        $enquete['id'] = $response->enquete;
+        $this->manterSemToken($enquete);
+    }
+
+    /**
+     * Objetiva mensagens de validação quando a enquete está sem perguntas
+     * ou quando uma das perguntas está sem respostas
+     */
+    public function testLegacyEdicaoSemRespostaOuPergunta()
+    {
+        $enquete = $this->getTemplate();
+        $response = $this->cadastro($enquete);
+        // seto o id no template
+        $enquete['id'] = $response->enquete;
+        $this->manterSemRespostaOuPergunta($enquete);
+    }
+
+    /**
+     * Objetiva mensagens de validação quando não existe titulo ou descricoes das perguntas/respostas,
+     * quando o tamanho das descricoes ou titulo for maior que o tamanho correto.
+     * Almeja também, a mensagem de sucesso quando o titulo ou as descricoes das perguntas/resposta
+     * estiverem com tamanho máximo permitido
+     */
+    public function testLegacyEdicaoTratandoDescricoesETitulo()
+    {
+        $enquete = $this->getTemplate();
+        $response = $this->cadastro($enquete);
+        // seto o id no template
+        $enquete['id'] = $response->enquete;
+        $this->manterTratandoDescricoesETitulo($enquete);
+    }
+
+    /**
+     * Objetiva o sucesso da exclusao
+     */
+    public function testLegacyExclusao()
+    {
+        $token = $this->getConta()->login();
+
+        $response = $this->cadastro($this->getTemplate());
+
+        $this->client->request(
+            'DELETE',
+            '/api/enquete/' . $response->enquete,
+            // parameters
+            array(),
+            // files
+            array(),
+            // headers
+            $this->getHeader()->getHeaders($token)
+        );
+        $responseExclusao = json_decode($this->client->getResponse()->getContent());
+
+        $enquete = $this->getRepository()->find($response->enquete);
+
+        $this->assertTrue(is_object($responseExclusao));
+        $this->assertTrue($responseExclusao->success);
+        $this->assertTrue(is_null($enquete));
+
+    }
+
+    /**
+     * Objetiva a mensagem de erro quando ocorre a tentativa de excluir uma enquete de outro usuário
+     */
+    public function testLegacyExclusaoTrantandoIds()
+    {
+        $token = $this->getConta()->login();
+
+        $response = $this->cadastro($this->getTemplate(), true, true);
+
+        $this->client->request(
+            'DELETE',
+            '/api/enquete/' . $response->enquete,
+            // parameters
+            array(),
+            // files
+            array(),
+            // headers
+            $this->getHeader()->getHeaders($token)
+        );
+        $responseExclusao = json_decode($this->client->getResponse()->getContent());
+        $enquete = $this->getRepository()->find($response->enquete);
+
+        $this->assertTrue(is_null($responseExclusao));
+        $this->assertTrue(is_object($enquete));
+
+    }
+
+    public function manterTratandoDescricoesETitulo($enquete)
+    {
+        // limite maximo
+        $str255 = str_repeat('a', 255);
+        // extrapola o limite
+        $str256 = str_repeat('a', 256);
+        $enquete255 = $enquete;
+        $enquete256 = $enquete;
+        $enqueteSDescTit = $enquete;
+
+        $enquete255['titulo'] = $str255;
+        $enquete255['perguntas'][0]['descricao'] = $str255;
+        $enquete255['perguntas'][0]['respostas'][0]['descricao'] = $str255;
+
+        $enquete256['titulo'] = $str256;
+        $enquete256['perguntas'][0]['descricao'] = $str256;
+        $enquete256['perguntas'][0]['respostas'][0]['descricao'] = $str256;
+
+        unset($enqueteSDescTit['titulo']);
+        unset($enqueteSDescTit['perguntas'][0]['descricao']);
+        unset($enqueteSDescTit['perguntas'][0]['respostas'][0]['descricao']);
+
+        if (empty($enquete['id'])) {
+            $response255 = $this->cadastro($enquete255);
+            $response256 = $this->cadastro($enquete256);
+            $responseSDescTit = $this->cadastro($enqueteSDescTit);
+        } else {
+            $response255 = $this->edicao($enquete255);
+            $response256 = $this->edicao($enquete256);
+            $responseSDescTit = $this->edicao($enqueteSDescTit);
+        }
+
+        // successo
+        $this->assertTrue(is_object($response255));
+        $this->assertTrue($response255->success == true);
+
+        // erro
+        $this->assertTrue(is_array($response256));
+        $this->assertTrue(is_array($responseSDescTit));
+
+        // verificação das validações
+        $this->assertTrue($response256[0]->property_path == 'titulo');
+        $this->assertTrue($response256[1]->property_path == 'perguntas[0].descricao');
+        $this->assertTrue($response256[2]->property_path == 'perguntas[0].respostas[0].descricao');
+
+        $this->assertTrue($responseSDescTit[0]->property_path == 'titulo');
+        $this->assertTrue($responseSDescTit[1]->property_path == 'perguntas[0].descricao');
+        $this->assertTrue($responseSDescTit[2]->property_path == 'perguntas[0].respostas[0].descricao');
+
+        $this->assertTrue(
+            $this->client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+    }
+
+    public function manterSemRespostaOuPergunta($enquete)
+    {
+        $enqueteSemPergunta = $enquete;
+        unset($enqueteSemPergunta['perguntas']);
+        $enqueteSemResposta = $enquete;
+        unset($enqueteSemResposta['perguntas'][0]['respostas']);
+
+        if (empty($enquete['id'])) {
+            $responseSemPergunta = $this->cadastro($enqueteSemPergunta);
+            $responseSemResposta = $this->cadastro($enqueteSemResposta);
+        } else {
+            $responseSemPergunta = $this->edicao($enqueteSemPergunta);
+            $responseSemResposta = $this->edicao($enqueteSemResposta);
+        }
+
+
+        $this->assertTrue(is_array($responseSemPergunta));
+        $this->assertTrue(is_array($responseSemResposta));
+
+        $this->assertTrue($responseSemPergunta[0]->property_path == 'perguntas');
+        $this->assertTrue($responseSemResposta[0]->property_path == 'perguntas[0].respostas');
+
+        $this->assertTrue(
+            $this->client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
+    }
+
+    public function manterSemToken($enquete = null)
+    {
+        if (empty($enquete['id'])) {
+            $response = $this->cadastro($enquete, false);
+        } else {
+            $response = $this->edicao($enquete, false);
+        }
+        $this->assertTrue(is_object($response));
+        $this->assertTrue($response->error == 'access_denied');
+
+        $this->assertTrue(
+            $this->client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            )
+        );
     }
 }
