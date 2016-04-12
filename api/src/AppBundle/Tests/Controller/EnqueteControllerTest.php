@@ -426,9 +426,10 @@ class EnqueteControllerTest extends WebTestCase
     public function manterTratandoDescricoesETitulo($enquete)
     {
         // limite maximo
-        $str255 = str_repeat('a', 255);
+        $str255 = "Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra la , depois divoltis porris, paradis. Paisis, filhis, espiritis santis. Me faiz elementum girarzis, nisi eros vermeio, in elementis me pra quem e amistosis quis leo. Manduma pinga";
         // extrapola o limite
-        $str256 = str_repeat('a', 256);
+        $str256 = "Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra la , depois divoltis porris, paradis. Paisis, filhis, espiritis santis. Me faiz elementum girarzis, nisi eros vermeio, in elementis me pra quem e amistosis quis leo. Manduma pingar";
+
         $enquete255 = $enquete;
         $enquete256 = $enquete;
         $enqueteSDescTit = $enquete;
