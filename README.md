@@ -1,7 +1,7 @@
 # Enquete
 CRUD de enquete, feito na linguagem PHP. O sistema utiliza Symfony 2.8, Doctrine2, AngularJS 1.5, Bootstrap 3, MySQL e autenticação via OAuth2.
 
-## Banco dedados
+## Banco de dados
 
 O SGBD escolhido original para o projeto foi o MySQL. Porém, a API funcionará com qualquer base de dados relacional escolhida.
 [Link para o SQLScript](/banco/Script.sql) do projeto.
