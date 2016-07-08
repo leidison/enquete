@@ -5,7 +5,8 @@ Gerenciamento de enquete, feito na linguagem PHP. O sistema utiliza Symfony 2.8,
 
 [https://ajudeme.herokuapp.com/](https://ajudeme.herokuapp.com/)
 
-[https://api-ajudeme.herokuapp.com/api](https://api-ajudeme.herokuapp.com/api)
+Exemplo de url da api
+[https://api-ajudeme.herokuapp.com/api/enquete?pagina=1](https://api-ajudeme.herokuapp.com/api/enquete?pagina=1)
 
 ## Banco de dados
 
